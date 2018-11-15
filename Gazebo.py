@@ -7,6 +7,7 @@ from std_msgs.msg import Float64MultiArray, Float32MultiArray
 from gazebo_msgs.srv import SetModelState
 from gazebo_msgs.srv import GetModelState
 from hand_simulator.srv import MoveServos
+from ackermann_msgs.msg import AckermannDrive
 from std_srvs.srv import Empty, EmptyResponse
 import tty, termios, sys, os
 from gazebo_msgs.msg import ModelState
@@ -19,6 +20,7 @@ class Gazebo:
     rospy.init_node('ackerman', anonymous=True)
     self.set_state_srv = rospy.ServiceProxy("/gazebo/set_model_state",SetModelState)
     self.get_state_srv = rospy.ServiceProxy("/gazebo/get_model_state",GetModelState)
+    self.publisher = rospy.Publisher('/ackermann_cmd', AckermannDrive, queue_size=10)
 
 
   def getState(self):
@@ -31,6 +33,7 @@ class Gazebo:
 
   def setState(self,xyz,quart):
     '''
+    set state in simulator 
       xyz: [x,y,z]
       quart: [x,y,z,w]
     '''
@@ -48,6 +51,18 @@ class Gazebo:
     res = self.set_state_srv.call(model_state)
     success = res.success
     return success
+
+  def action(self,speed,angle):
+    '''
+    Do actions
+    '''
+    rate = rospy.Rate(100)
+    while not rospy.is_shutdown():
+      msg = AckermannDrive()
+      msg.steering_angle = angle
+      msg.speed = speed
+      self.publisher.publish(msg)
+      rate.sleep()
 
 
 
