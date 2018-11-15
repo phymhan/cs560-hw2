@@ -1,0 +1,11 @@
+*.jpg
+*/*.jpg
+
+*.png
+*/*.png
+
+*.gif
+*/*.gif
+
+.idea
+
