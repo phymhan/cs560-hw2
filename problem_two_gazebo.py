@@ -16,10 +16,19 @@ import numpy as np
 import reeds_shepp_path_planning
 import matplotlib.pyplot as plt
 import argparse
-# from Gazebo import Gazebo
+from Gazebo import Gazebo
+import time
+import tf
 
 random.seed(0)
 np.random.seed(0)
+
+MAX_SPEED = 1
+MAX_ANGLE = 60
+MAX_DURATION = 10
+CARLEN = 1
+USE_DEG = True
+Z_VALUE = 0
 
 
 class RRT():
@@ -55,6 +64,7 @@ class RRT():
         self.curvature = curvature
         self.step_size = step_size
         self.sample_control = sample_control
+        self.agent = agent
 
     def Planning(self, animation=True):
         """
@@ -66,24 +76,24 @@ class RRT():
         self.nodeList = [self.start]
         for i in range(self.maxIter):
             rnd = self.get_random_point()
-            if self.sample_control:
-                # sample a new rnd
-                nind = self.GetNearestListIndex(self.nodeList, rnd)
-                rnd = self.sample_via_control(self.nodeList[nind])
+
+            # sample a new rnd
+            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            currState = self.get_state_from_index(nind)
+            control = self.sample_control(currState)
+            new_rnd = self.perform_control(currState, control)
+
+            # add an edge: nodeList[nind] -> new_rnd
+            newNode = self.steer(new_rnd, nind)
+
             nind = self.GetNearestListIndex(self.nodeList, rnd)
 
             newNode = self.steer(rnd, nind)
             if newNode is None:
                 continue
-
-            if self.CollisionCheck(newNode, self.obstacleList):
-                nearinds = self.find_near_nodes(newNode)
-                newNode = self.choose_parent(newNode, nearinds)
-                if newNode is None:
-                    continue
-                self.nodeList.append(newNode)
-                if self.star:
-                    self.rewire(newNode, nearinds)
+            
+            # add new node to the tree
+            self.nodeList.append(newNode)
 
             if animation and i % 5 == 0:
                 self.DrawGraph(rnd=rnd)
@@ -95,31 +105,35 @@ class RRT():
         path = self.gen_final_course(lastIndex)
         return path
     
-    def sample_via_control(self, node):
-        kappa = random.uniform(-self.curvature, self.curvature)
-        arclen = random.random() * 1
-        x, y, yaw = node.x, node.y, node.yaw
-        if abs(kappa) < 0.001:
-            # straight line
-            nx = x + arclen*math.cos(yaw)
-            ny = y + arclen*math.sin(yaw)
-        else:
-            R = 1 / abs(kappa)
-            angle = arclen / R
-            da = 0
-            if kappa < 0:
-                ox = x + R*math.cos(yaw-math.pi/2)
-                oy = y + R*math.sin(yaw-math.pi/2)
-                a = math.pi + (yaw - math.pi/2) - angle
-                da = -angle
-            else:
-                ox = x + R*math.cos(yaw+math.pi/2)
-                oy = y + R*math.sin(yaw+math.pi/2)
-                a = math.pi - (yaw + math.pi/2) + angle
-                da = angle
-            nx = ox + R*math.cos(a)
-            ny = oy + R*math.sin(a)
-        return Node(nx, ny, self.pi_2_pi(yaw+da))
+    def get_state_from_index(self, nind):
+        node = self.nodeList[nind]
+        return [node.x, node.y, node.x], node.yaw
+
+    def sample_control(self, currState):
+        # node : node
+        # state: (xyz, yaw)
+        speed = random.uniform(-MAX_SPEED, MAX_SPEED)
+        angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
+        if not USE_DEG:
+            angle = np.deg2rad(angle)
+        duration = random.uniform(0, MAX_DURATION)
+        return speed, angle, duration
+    
+    def euler2quart(self, euler):
+        return tf.transformations.quaternion_from_euler(*euler)
+
+    def perform_control(self, state, control):
+        # first, set state
+        euler = (0, 0, state[1])
+        quart = self.euler2quart(euler)
+        self.agent.setState(state[0], quart)
+
+        # then, action
+        self.agent.action(*control)
+        time.sleep(control[2])
+
+        # get new state
+        state_new = self.agent.getState()
 
     def choose_parent(self, newNode, nearinds):
         if len(nearinds) == 0:
@@ -355,7 +369,7 @@ def main(opt):
 
     # agent = Gazebo()
 
-    rrt = RRT(start, goal, randArea=[-2.0, 15.0, -2, 15], obstacleList=obstacleList,
+    rrt = RRT(start, goal, randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, sample_control=opt.sample_control,
               )
@@ -383,4 +397,10 @@ if __name__ == '__main__':
     parser.add_argument('--step_size', type=float, default=0.1)
     parser.add_argument('--sample_control', action='store_true')
     opt = parser.parse_args()
+
+    # set defaults for debuging
+    opt.no_star = True
+    opt.show_animation = False
+    opt.curvature = math.tan(np.deg2rad(MAX_ANGLE)) / CARLEN
+
     main(opt)
