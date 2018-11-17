@@ -7,7 +7,7 @@ author: AtsushiSakai(@Atsushi_twi)
 """
 
 import sys
-sys.path.append("../ReedsSheppPath/")
+sys.path.append("ReedsSheppPath")
 
 import random
 import math
