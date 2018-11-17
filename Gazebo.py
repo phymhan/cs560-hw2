@@ -24,12 +24,20 @@ class Gazebo:
 
 
   def getState(self):
+    '''
+      Out:
+        yaw: steering angle
+    '''
     get_state = GetModelState()
     get_state.model_name = "ackermann_vehicle"
     res = self.get_state_srv(get_state)
     xyz = [res.pose.position.x,res.pose.position.y,res.pose.position.z]
     quart = [res.orientation.x, res.orientation.y, res.orientation.z, res.orientation.w]
-    return xyz, quart
+    euler = tf.transformations.euler_from_quaternion(quart)
+    roll = euler[0]
+    pitch = euler[1]
+    yaw = euler[2]
+    return xyz, yaw
 
   def setState(self,xyz,quart):
     '''
@@ -52,12 +60,14 @@ class Gazebo:
     success = res.success
     return success
 
-  def action(self,speed,angle):
+  def action(self,speed,angle,duration):
     '''
     Do actions
+    duration: time in [s]
     '''
     rate = rospy.Rate(100)
-    while not rospy.is_shutdown():
+    begin = time.time()
+    while not rospy.is_shutdown() and (time.time() - start_time < duration):
       msg = AckermannDrive()
       msg.steering_angle = angle
       msg.speed = speed
