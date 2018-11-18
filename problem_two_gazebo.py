@@ -369,7 +369,7 @@ def main(opt):
 
     rrt = RRT(start, goal, randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
-              curvature=opt.curvature, step_size=opt.step_size)
+              curvature=opt.curvature, step_size=opt.step_size, agent=agent)
     path = rrt.Planning(animation=opt.show_animation)
 
     if path is None:
