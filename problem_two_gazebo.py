@@ -412,7 +412,7 @@ if __name__ == '__main__':
 
     # set defaults for debuging
     opt.no_star = True
-    opt.show_animation = False
+    # opt.show_animation = False
     opt.curvature = math.tan(np.deg2rad(MAX_ANGLE)) / CARLEN
 
     main(opt)
