@@ -450,7 +450,8 @@ class RRT():
             time.sleep(control[2])
             expState = ([path[0], path[1], Z_VALUE], path[2])
             self.set_state(expState)
-        self.stop()
+        print('=== YES! ===')
+        # self.stop()
     
     def stop(self):
         self.set_state(self.get_state())
