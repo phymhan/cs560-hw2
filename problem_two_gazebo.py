@@ -38,8 +38,7 @@ class RRT():
 
     def __init__(self, start, goal, obstacleList, randArea,
                  goalSampleRate=10, maxIter=400, star=True,
-                 curvature=1, step_size=0.1, sample_control=False,
-                 agent=None):
+                 curvature=1, step_size=0.1, agent=None):
         """
         Setting Parameter
 
@@ -63,7 +62,6 @@ class RRT():
         self.star = star
         self.curvature = curvature
         self.step_size = step_size
-        self.sample_control = sample_control
         self.agent = agent
 
     def Planning(self, animation=True):
@@ -364,8 +362,8 @@ def main(opt):
     ]  # [x,y,size(radius)]
 
     # Set Initial parameters
-    start = [0.0, 0.0, np.deg2rad(90.0)]
-    goal = [10.0, 2.0, np.deg2rad(0.0)]
+    start = [-8, -6, np.deg2rad(90.0)]
+    goal = [8, 4, np.deg2rad(0.0)]
 
     # agent = Gazebo()
 
