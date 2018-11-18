@@ -321,17 +321,17 @@ class RRT():
 
         return minind
 
-    def CollisionCheck(self, node, obstacleList):
+    # def CollisionCheck(self, node, obstacleList):
 
-        for (ox, oy, size) in obstacleList:
-            for (ix, iy) in zip(node.path_x, node.path_y):
-                dx = ox - ix
-                dy = oy - iy
-                d = dx * dx + dy * dy
-                if d <= size ** 2:
-                    return False  # collision
+    #     for (ox, oy, size) in obstacleList:
+    #         for (ix, iy) in zip(node.path_x, node.path_y):
+    #             dx = ox - ix
+    #             dy = oy - iy
+    #             d = dx * dx + dy * dy
+    #             if d <= size ** 2:
+    #                 return False  # collision
 
-        return True  # safe
+    #     return True  # safe
 
 
 class Node():
