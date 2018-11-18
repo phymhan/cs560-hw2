@@ -118,8 +118,8 @@ class RRT():
         if not USE_DEG:
             angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
-        return 1, math.pi, 5
-        # return speed, angle, duration
+        # return 1, math.pi, 5
+        return speed, angle, duration
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
