@@ -391,7 +391,7 @@ def main(opt):
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
     initState = ([-8, -6, 0.1], np.deg2rad(opt.yaw))
-    control = (opt.speed, opt.angle, opt.duration)
+    control = (opt.speed, np.deg2rad(opt.angle), opt.duration)
     rrt.perform_control(initState, control)
     rrt.agent.action(0, 0, 1)
     # path = rrt.Planning(animation=opt.show_animation)
