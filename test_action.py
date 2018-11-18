@@ -393,6 +393,7 @@ def main(opt):
     initState = ([-8, -6, 0.1], math.pi/2)
     control = (opt.speed, opt.angle, opt.duration)
     rrt.perform_control(initState, control)
+    rrt.agent.action(0, 0, 1)
     # path = rrt.Planning(animation=opt.show_animation)
 
 
