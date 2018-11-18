@@ -96,7 +96,7 @@ class RRT():
             # add new node to the tree
             self.nodeList.append(newNode)
             print('--> new node inserted')
-            print(self.nodeList)
+            # print(self.nodeList)
 
             if animation and i % 5 == 0:
                 self.DrawGraph(rnd=rnd)
@@ -364,21 +364,11 @@ def main(opt):
     #  (7, 5, 2),
     #  (9, 5, 2)
     #  ]  # [x,y,size(radius)]
-    obstacleList = [
-        (5, 5, 1),
-        (4, 6, 1),
-        (4, 8, 1),
-        (4, 10, 1),
-        (6, 5, 1),
-        (7, 5, 1),
-        (8, 6, 1),
-        (8, 8, 1),
-        (8, 10, 1)
-    ]  # [x,y,size(radius)]
+    obstacleList = []  # [x,y,size(radius)]
 
     # Set Initial parameters
-    start = [-8, -6, np.deg2rad(90)]
-    goal = [8, 4, np.deg2rad(0.0)]
+    start = [-8., -6., np.deg2rad(90.)]
+    goal = [8., 4., np.deg2rad(0.0)]
 
     agent = Gazebo()
 
