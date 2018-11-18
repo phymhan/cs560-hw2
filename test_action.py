@@ -390,9 +390,9 @@ def main(opt):
     rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=None,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
-    initState = ([-8, -6, math.pi/2])
-    control = (2, 0, 2)
-    rrt.perform_control(state, control)
+    initState = ([-8, -6, 0.1], math.pi/2)
+    control = (2, -60, 2)
+    rrt.perform_control(initState, control)
     # path = rrt.Planning(animation=opt.show_animation)
 
 
