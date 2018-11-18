@@ -128,6 +128,7 @@ class RRT():
         # first, set state
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
+        print(quart)
         # self.agent.setState(state[0], quart)
         self.agent.setState([5,5,0], quart)
         time.sleep(5)
