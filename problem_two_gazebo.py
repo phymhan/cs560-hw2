@@ -365,7 +365,7 @@ def main(opt):
     start = [-8, -6, np.deg2rad(90.0)]
     goal = [8, 4, np.deg2rad(0.0)]
 
-    # agent = Gazebo()
+    agent = Gazebo()
 
     rrt = RRT(start, goal, randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
