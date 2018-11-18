@@ -95,8 +95,8 @@ class RRT():
             print('--> new node inserted')
             # print(self.nodeList)
 
-            # if animation and i % 5 == 0:
-            #     self.DrawGraph(rnd=rnd)
+            if animation and i % 5 == 0:
+                self.DrawGraph(rnd=None)
 
         # generate coruse
         lastIndex = self.get_best_last_index()
