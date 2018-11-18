@@ -140,9 +140,8 @@ class RRT():
         # self.agent.setState([5,5,0], quart)
         # time.sleep(5)
         print('setting done.')
-        print('confirm state:')
         currState = self.agent.getState()
-        print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
+        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
         print('action')
         # print('setting done. performing action...')
         # then, action
@@ -392,8 +391,8 @@ def main(opt):
 
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
-    # goal = [8., 4., np.deg2rad(0.0)]
-    goal = [-8, 5, np.deg2rad(90)]
+    goal = [8., 4., np.deg2rad(0.0)]
+    # goal = [-8, 5, np.deg2rad(90)]
 
     agent = Gazebo()
 
