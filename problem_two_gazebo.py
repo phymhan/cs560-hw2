@@ -178,8 +178,6 @@ class RRT():
 
         nearestNode = self.nodeList[nind]
         print('--> nind: %d' % nind)
-        print(self.nodeList)
-        print(nearestNode)
 
         px, py, pyaw, mode, clen = reeds_shepp_path_planning.reeds_shepp_path_planning(
             nearestNode.x, nearestNode.y, nearestNode.yaw, rnd.x, rnd.y, rnd.yaw, self.curvature, self.step_size)
