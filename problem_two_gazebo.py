@@ -501,15 +501,14 @@ def main(opt):
     # path planning
     if not opt.load_and_replay:
         control, path = rrt.Planning(animation=opt.show_animation)
+        # save
+        rrt.save_tree()
     else:
         print('=-=-=-=-=-=-=-=-= load from npy file')
         rrt.load_tree()
         control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
     
     if len(path) > 1:
-        # save
-        rrt.save_tree()
-
         # draw
         rrt.DrawGraph()
         plt.plot([x for (x, y, _) in path], [y for (x, y, _) in path], '-r')
