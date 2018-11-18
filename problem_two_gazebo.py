@@ -23,7 +23,7 @@ import tf
 random.seed(0)
 np.random.seed(0)
 
-MAX_SPEED = 2
+MAX_SPEED = 1
 MAX_ANGLE = 15
 MAX_DURATION = 2
 CARLEN = 5
