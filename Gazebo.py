@@ -24,6 +24,7 @@ class Gazebo:
     self.position = None
     self.quart = None
     self.yaw = None
+    rospy.spin()
     
   def callback(self,res):
     self.position = [res.pose.position.x,res.pose.position.y,res.pose.position.z]
