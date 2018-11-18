@@ -13,33 +13,48 @@ import tty, termios, sys, os
 from gazebo_msgs.msg import ModelState
 from geometry_msgs.msg import Pose
 import time
+import tf
 
 
 class Gazebo:
   def __init__(self):
     rospy.init_node('ackerman', anonymous=True)
     self.set_state_srv = rospy.ServiceProxy("/gazebo/set_model_state",SetModelState)
-    self.get_state = rospy.Subscriber("/gazebo/model_states", ModelState, self.callback)
+    # self.get_state = rospy.Subscriber("/gazebo/model_states", ModelState, self.callback)
+    self.get_state_srv = rospy.ServiceProxy("/gazebo/my_model_state", GetModelState)
     self.publisher = rospy.Publisher('/ackermann_cmd', AckermannDrive, queue_size=10)
     self.position = None
     self.quart = None
     self.yaw = None
-    rospy.spin()
     
-  def callback(self,res):
-    self.position = [res.pose.position.x,res.pose.position.y,res.pose.position.z]
-    self.quart = [res.orientation.x, res.orientation.y, res.orientation.z, res.orientation.w]
-    euler = tf.transformations.euler_from_quaternion(quart)
-    roll = euler[0]
-    pitch = euler[1]
-    self.yaw = euler[2]
+  
 
   def getState(self):
     '''
       Out:
         yaw: steering angle
     '''
-    return self.position, self.yaw
+    # return self.position, self.yaw
+    # res = self.get_state_srv.call("1","2")
+    # xyz = [res.pose.position.x, res.pose.position.y, res.pose.position.z]
+    # quart = [res.pose.orientation.x, res.pose.orientation.y, res.pose.orientation.z, res.pose.orientation.w]
+    # euler = tf.transformations.euler_from_quaternion(quart)
+    # roll = euler[0]
+    # pitch = euler[1]
+    # yaw = euler[2]
+    # print('------------- xyz = ',xyz)
+    # return xyz, yaw
+
+    res = self.get_state_srv.call("1","2")
+    xyz = [res.pose.position.x, res.pose.position.y, res.pose.position.z]
+    quart = [res.pose.orientation.x, res.pose.orientation.y, res.pose.orientation.z, res.pose.orientation.w]
+    euler = tf.transformations.euler_from_quaternion(quart)
+    roll = euler[0]
+    pitch = euler[1]
+    yaw = euler[2]
+    print('------------- xyz = ',xyz)
+    return xyz, yaw
+
 
   def setState(self,xyz,quart):
     '''
@@ -69,7 +84,7 @@ class Gazebo:
     '''
     rate = rospy.Rate(100)
     begin = time.time()
-    while not rospy.is_shutdown() and (time.time() - start_time < duration):
+    while not rospy.is_shutdown() and (time.time() - begin < duration):
       msg = AckermannDrive()
       msg.steering_angle = angle
       msg.speed = speed
@@ -77,6 +92,8 @@ class Gazebo:
       rate.sleep()
 
 
+if __name__=='__main__':
+  gazebo = Gazebo()
 
     
 
