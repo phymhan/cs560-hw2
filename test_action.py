@@ -386,11 +386,13 @@ def main(opt):
     # goal = [-8, 5, np.deg2rad(90)]
 
     agent = Gazebo()
-    agent.action(1, 0, 2)
 
-    # rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
-    #           goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
-    #           curvature=opt.curvature, step_size=opt.step_size, agent=agent)
+    rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
+              goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
+              curvature=opt.curvature, step_size=opt.step_size, agent=agent)
+    initState = ([-8, -6, math.pi/2])
+    control = (2, 0, 2)
+    rrt.perform_control(state, control)
     # path = rrt.Planning(animation=opt.show_animation)
 
 
