@@ -188,8 +188,8 @@ class RRT():
 
         # get new state
         state_new = self.agent.getState()
-        print('got new state')
-        print(state_new)
+        # print('got new state')
+        # print(state_new)
         new_node = Node(state_new[0][0], state_new[0][1], state_new[1])
         new_node.control = control
         return new_node
