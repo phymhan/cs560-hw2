@@ -19,6 +19,7 @@ import argparse
 from Gazebo import Gazebo
 import time
 import tf
+from scipy.stats import mode
 
 random.seed(0)
 np.random.seed(0)
@@ -71,8 +72,11 @@ class RRT():
 
         self.nodeList = [self.start]
         for i in range(self.maxIter):
-            rnd = self.get_random_point()
-            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            if True:
+                rnd, nind = self.get_voronoi_point()
+            else:
+                rnd = self.get_random_point()
+                nind = self.GetNearestListIndex(self.nodeList, rnd)
 
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
@@ -263,6 +267,13 @@ class RRT():
         node = Node(rnd[0], rnd[1], rnd[2])
 
         return node
+    
+    def get_voronoi_point(self):
+        # generate lots of points
+        points = np.random.rand(1000, 2)
+        points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
+        points -= np.array([self.maxrand_x+self.minrand_x, self.maxrand_y+self.minrand_y])/2
+        dists = 
 
     def get_best_last_index(self):
         #  print("get_best_last_index")
@@ -430,7 +441,7 @@ def main(opt):
 
     rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
-              curvature=opt.curvature, step_size=opt.step_size, agent=agent)
+              curvature=opt.curvature, step_size=opt.step_size, agent=agent, maxIter=100000)
     path = rrt.Planning(animation=opt.show_animation)
 
     if path is None:
