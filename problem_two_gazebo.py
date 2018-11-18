@@ -39,7 +39,7 @@ class RRT():
 
     def __init__(self, start, goal, obstacleList, randArea,
                  goalSampleRate=10, maxIter=400, star=True,
-                 curvature=1, step_size=0.1, agent=None):
+                 curvature=1, step_size=0.1, agent=None, opt=None):
         """
         Setting Parameter
 
@@ -62,6 +62,7 @@ class RRT():
         self.curvature = curvature
         self.step_size = step_size
         self.agent = agent
+        self.opt = opt
 
     def Planning(self, animation=True):
         """
@@ -103,11 +104,11 @@ class RRT():
                 self.DrawGraph(rnd=rnd)
 
         # generate coruse
-        lastIndex = self.get_best_last_index()
+        lastIndex = self.GetNearestListIndex(self.nodeList, self.end)
         if lastIndex is None:
             return None
-        path = self.gen_final_course(lastIndex)
-        return path
+        control, path = self.gen_final_course(lastIndex)
+        return control, path
     
     def expand_tree(self, newNode):
         self.nodeList.append(newNode)
@@ -129,7 +130,7 @@ class RRT():
         angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
         
-        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3**2:
+        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3.5**2:
             if random.random() < 1:
                 control = self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
             else:
@@ -307,15 +308,30 @@ class RRT():
         return None
 
     def gen_final_course(self, goalind):
-        path = [[self.end.x, self.end.y]]
-        while self.nodeList[goalind].parent is not None:
+        # # old
+        # path = [[self.end.x, self.end.y]]
+        # while self.nodeList[goalind].parent is not None:
+        #     node = self.nodeList[goalind]
+        #     for (ix, iy) in zip(reversed(node.path_x), reversed(node.path_y)):
+        #         path.append([ix, iy])
+        #     #  path.append([node.x, node.y])
+        #     goalind = node.parent
+        # path.append([self.start.x, self.start.y])
+        # return path
+
+        # new
+        rootInd = None
+        nodeList = []
+        while self.nodeList[goalind].parent != rootInd:
             node = self.nodeList[goalind]
-            for (ix, iy) in zip(reversed(node.path_x), reversed(node.path_y)):
-                path.append([ix, iy])
-            #  path.append([node.x, node.y])
+            nodeList.append(node)
             goalind = node.parent
-        path.append([self.start.x, self.start.y])
-        return path
+        controls = []
+        paths = [[self.start.x, self.start.y, self.start.yaw]]  # [[x, y, yaw]]
+        for node in reversed(nodeList):
+            controls.append(node.control)
+            paths.append([node.x, node.y, node.yaw])
+        return controls, paths
 
     def calc_dist_to_goal(self, x, y):
         return np.linalg.norm([x - self.end.x, y - self.end.y])
@@ -400,6 +416,36 @@ class RRT():
 
     #     return True  # safe
 
+    def save_tree(self):
+        # [parent, x, y, yaw, speed, angle, duration]
+        tree = []
+        for node in self.nodeList:
+            if len(node.control) == 0:
+                node.control = (None, None, None)
+            tree.append([node.parent, node.x, node.y, node.yaw, node.control[0], node.control[1], node.control[2]])
+        np.save(self.opt.tree_filename, tree)
+    
+    def load_tree(self):
+        nodeList = []
+        tree = np.load(self.opt.tree_filename)
+        for a in tree:
+            node = Node(a[1], a[2], a[3])
+            node.parent = None if a[0] is None else int(a[0])
+            node.control = (tree[4], tree[5], tree[6])
+            nodeList.append(node)
+        self.nodeList = nodeList
+    
+    def replay(self, controls):
+        print('===========================================')
+        print('REPLAY')
+        # set init state
+        initState = ([self.start.x, self.start.y, Z_VALUE], self.start.yaw)
+        quart = self.euler2quart((0, 0, initState[1]))
+        self.agent.setState(initState[0], quart)
+        for control in controls:
+            self.agent.action(*control)
+            time.sleep(control[2])
+        self.agent.action(0, 0, 60)
 
 class Node():
     """
@@ -434,15 +480,27 @@ def main(opt):
 
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
-    goal = [8., 4., np.deg2rad(0.0)]
-    # goal = [-6, 5, np.deg2rad(90)]
+    # goal = [8., 4., np.deg2rad(0.0)]
+    goal = [-6, 5, np.deg2rad(90)]
 
     agent = Gazebo()
 
     rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
-              curvature=opt.curvature, step_size=opt.step_size, agent=agent, maxIter=100000)
-    path = rrt.Planning(animation=opt.show_animation)
+              curvature=opt.curvature, step_size=opt.step_size, agent=agent, maxIter=100000, opt=opt)
+    control, path = rrt.Planning(animation=opt.show_animation)
+    if len(path) > 1:
+        # save
+        rrt.save_tree()
+
+        # draw
+        rrt.DrawGraph()
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
+        plt.pause(0.001)
+        plt.show()
+
+        # replay
+        rrt.replay(control)
 
     if path is None:
         print('Path not found. Maximum # of iterations exceeded.')
@@ -465,6 +523,7 @@ if __name__ == '__main__':
     parser.add_argument('--curvature', type=float, default=1.0)
     parser.add_argument('--step_size', type=float, default=0.2)
     parser.add_argument('--sample_control', action='store_true')
+    parser.add_argument('--tree_filename', type=str, default='tree.npy')
     opt = parser.parse_args()
 
     # set defaults for debuging
