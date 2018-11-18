@@ -163,7 +163,6 @@ class RRT():
     def set_state(self, state):
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
-        print(quart)
         self.agent.setState(state[0], quart)
     
     def get_state(self):
