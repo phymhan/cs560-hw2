@@ -23,8 +23,8 @@ import tf
 random.seed(0)
 np.random.seed(0)
 
-MAX_SPEED = 2
-MAX_ANGLE = 60
+MAX_SPEED = 10
+MAX_ANGLE = 30
 MAX_DURATION = 5
 CARLEN = 5
 USE_DEG = True
@@ -112,7 +112,7 @@ class RRT():
     def sample_control(self, currState):
         # node : node
         # state: (xyz, yaw)
-        speed = random.uniform(-MAX_SPEED, MAX_SPEED)
+        speed = random.uniform(0, MAX_SPEED)
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
         if not USE_DEG:
             angle = np.deg2rad(angle)
