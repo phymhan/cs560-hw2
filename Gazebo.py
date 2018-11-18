@@ -19,7 +19,7 @@ class Gazebo:
   def __init__(self):
     rospy.init_node('ackerman', anonymous=True)
     self.set_state_srv = rospy.ServiceProxy("/gazebo/set_model_state",SetModelState)
-    self.get_state = rospy.Subscriber("/gazebo/model_states", ModelStates, self.callback)
+    self.get_state = rospy.Subscriber("/gazebo/model_states", ModelState, self.callback)
     self.publisher = rospy.Publisher('/ackermann_cmd', AckermannDrive, queue_size=10)
     self.position = None
     self.quart = None
