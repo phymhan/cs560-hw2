@@ -173,7 +173,7 @@ class RRT():
         directPathAngle = self.pi_2_pi(directPathAngle)
         speed = 1
         angle = srcState[1] - directPathAngle
-        return speed, -angle, math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        return -speed, angle, math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
 
     # def choose_parent(self, newNode, nearinds):
     #     if len(nearinds) == 0:
