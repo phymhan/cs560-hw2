@@ -29,6 +29,7 @@ MAX_DURATION = 2
 CARLEN = 5
 USE_DEG = True
 Z_VALUE = 0.1
+TOL_GOAL = 1
 
 
 class RRT():
@@ -88,10 +89,10 @@ class RRT():
             if newNode is None:
                 continue
             
-            # add new node to the tree
-            self.nodeList.append(newNode)
-            print('--> new node inserted')
-            # print(self.nodeList)
+            # add new node to the tree, and check if goal is reached
+            if self.expand_tree(newNode):
+                print('======= GOAL =======')
+                break
 
             if animation: # and i % 5 == 0:
                 self.DrawGraph(rnd=rnd)
@@ -103,6 +104,14 @@ class RRT():
         path = self.gen_final_course(lastIndex)
         return path
     
+    def expand_tree(self, newNode):
+        self.nodeList.append(newNode)
+        print('--> new node inserted')
+        
+        # check if goal is reached
+        d2 = (self.end.x - newNode.x) ** 2 + (self.end.y - newNode.y) ** 2
+        return d2 < TOL_GOAL ** 2
+
     def get_state_from_index(self, nind):
         node = self.nodeList[nind]
         return [node.x, node.y, Z_VALUE], node.yaw
@@ -383,11 +392,12 @@ def main(opt):
 
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
-    goal = [8., 4., np.deg2rad(0.0)]
+    # goal = [8., 4., np.deg2rad(0.0)]
+    goal = [-8, 5, np.deg2rad(90)]
 
     agent = Gazebo()
 
-    rrt = RRT(start, goal, randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
+    rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
     path = rrt.Planning(animation=opt.show_animation)
