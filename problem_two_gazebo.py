@@ -77,11 +77,11 @@ class RRT():
             # sample a new rnd
             # nind = self.GetNearestListIndex(self.nodeList, rnd)
 
-            q = self.euler2quart((0, 0, np.rad2deg(5)))
+            q = self.euler2quart((0, 0, math.pi))
             self.agent.setState([3,4,0.1], q)
             s = self.agent.getState()
             print('--------------', s[0])
-            print('==============', np.rad2deg(s[1]))
+            print('==============', s[1])
 
 
 
