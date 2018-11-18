@@ -77,8 +77,11 @@ class RRT():
 
             # sample a new rnd
             nind = self.GetNearestListIndex(self.nodeList, rnd)
+            print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
+            print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
             control = self.sample_control(currState)
+            print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
             # add an edge: nodeList[nind] -> new_rnd
@@ -105,7 +108,7 @@ class RRT():
     
     def get_state_from_index(self, nind):
         node = self.nodeList[nind]
-        return [node.x, node.y, node.x], node.yaw
+        return [node.x, node.y, node.z], node.yaw
 
     def sample_control(self, currState):
         # node : node
@@ -121,17 +124,20 @@ class RRT():
         return tf.transformations.quaternion_from_euler(*euler)
 
     def perform_control(self, state, control):
+        print('setting state...')
         # first, set state
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
         self.agent.setState(state[0], quart)
-
+        print('setting done. performing action...')
         # then, action
         self.agent.action(*control)
         time.sleep(control[2])
+        print('action done.')
 
         # get new state
         state_new = self.agent.getState()
+        print('got new state')
 
     def choose_parent(self, newNode, nearinds):
         if len(nearinds) == 0:
