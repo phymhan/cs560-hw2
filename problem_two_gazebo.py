@@ -138,7 +138,7 @@ class RRT():
         print(quart)
         self.agent.setState(state[0], quart)
         # self.agent.setState([5,5,0], quart)
-        time.sleep(5)
+        # time.sleep(5)
         print('setting done.')
         print('confirm state:')
         currState = self.agent.getState()
