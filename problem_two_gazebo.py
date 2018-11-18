@@ -433,7 +433,7 @@ class RRT():
         for a in tree:
             node = Node(a[1], a[2], a[3])
             node.parent = None if a[0] is None else int(a[0])
-            node.control = (tree[4], tree[5], tree[6])
+            node.control = (a[4], a[5], a[6])
             nodeList.append(node)
         self.nodeList = nodeList
     
