@@ -375,7 +375,7 @@ def main(opt):
     ]  # [x,y,size(radius)]
 
     # Set Initial parameters
-    start = [-8, -6, np.deg2rad(90.0)]
+    start = [-8, -6, np.deg2rad(0)]
     goal = [8, 4, np.deg2rad(0.0)]
 
     agent = Gazebo()
