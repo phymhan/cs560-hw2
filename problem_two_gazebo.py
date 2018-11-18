@@ -125,7 +125,7 @@ class RRT():
         angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
         
-        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 10**2:
+        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3**2:
             if random.random() < 0.5:
                 control = self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
             else:
