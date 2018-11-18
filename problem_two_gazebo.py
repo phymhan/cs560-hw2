@@ -157,32 +157,46 @@ class RRT():
         new_node = Node(state_new[0][0], state_new[0][1], state_new[1])
         new_node.control = control
         return new_node
+    
+    # def calc_control(self, srcNode, tarNode):
+    #     directPathAngle = math.atan2(tarNode.y-srcNode.y, tarNode.x-srcNode.x)
+    #     directPathAngle = self.pi_2_pi(directPathAngle)
+    #     speed = 1
+    #     angle = srcNode.yaw - directPathAngle
+    #     return speed, angle, math.sqrt((tarNode.y-srcNode.y)**2+(tarNode.x-srcNode.x)**2)/speed
 
-    def choose_parent(self, newNode, nearinds):
-        if len(nearinds) == 0:
-            return newNode
+    def calc_control(self, srcState, tarState):
+        directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
+        directPathAngle = self.pi_2_pi(directPathAngle)
+        speed = 1
+        angle = srcState[1] - directPathAngle
+        return speed, angle, math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
 
-        dlist = []
-        for i in nearinds:
-            tNode = self.steer(newNode, i)
-            if tNode is None:
-                continue
+    # def choose_parent(self, newNode, nearinds):
+    #     if len(nearinds) == 0:
+    #         return newNode
 
-            if self.CollisionCheck(tNode, self.obstacleList):
-                dlist.append(tNode.cost)
-            else:
-                dlist.append(float("inf"))
+    #     dlist = []
+    #     for i in nearinds:
+    #         tNode = self.steer(newNode, i)
+    #         if tNode is None:
+    #             continue
 
-        mincost = min(dlist)
-        minind = nearinds[dlist.index(mincost)]
+    #         if self.CollisionCheck(tNode, self.obstacleList):
+    #             dlist.append(tNode.cost)
+    #         else:
+    #             dlist.append(float("inf"))
 
-        if mincost == float("inf"):
-            print("mincost is inf")
-            return newNode
+    #     mincost = min(dlist)
+    #     minind = nearinds[dlist.index(mincost)]
 
-        newNode = self.steer(newNode, minind)
+    #     if mincost == float("inf"):
+    #         print("mincost is inf")
+    #         return newNode
 
-        return newNode
+    #     newNode = self.steer(newNode, minind)
+
+    #     return newNode
 
     def pi_2_pi(self, angle):
         return (angle + math.pi) % (2 * math.pi) - math.pi
