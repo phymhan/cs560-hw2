@@ -125,7 +125,7 @@ class RRT():
         angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
         
-        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 5**2:
+        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 10**2:
             return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
 
         return speed, angle, duration
@@ -173,7 +173,7 @@ class RRT():
         directPathAngle = self.pi_2_pi(directPathAngle)
         speed = 1
         angle = srcState[1] - directPathAngle
-        return -speed, angle, math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        return speed, -angle, math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
 
     # def choose_parent(self, newNode, nearinds):
     #     if len(nearinds) == 0:
