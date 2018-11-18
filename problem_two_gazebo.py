@@ -490,8 +490,8 @@ def main(opt):
 
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
-    # goal = [8., 4., np.deg2rad(0.0)]
-    goal = [-6, 5, np.deg2rad(90)]
+    goal = [8., 4., np.deg2rad(0.0)]
+    # goal = [-6, 5, np.deg2rad(90)]
 
     agent = Gazebo()
 
@@ -540,7 +540,7 @@ if __name__ == '__main__':
     parser.add_argument('--curvature', type=float, default=1.0)
     parser.add_argument('--step_size', type=float, default=0.2)
     parser.add_argument('--sample_control', action='store_true')
-    parser.add_argument('--tree_filename', type=str, default='tree.npy')
+    parser.add_argument('--tree_filename', type=str, default='tree_naive.npy')
     parser.add_argument('--load_and_replay', action='store_true')
     opt = parser.parse_args()
 
