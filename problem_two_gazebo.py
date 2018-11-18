@@ -144,7 +144,7 @@ class RRT():
         # time.sleep(5)
         print('setting done.')
         currState = self.agent.getState()
-        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
+        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         print('action')
         # print('setting done. performing action...')
         # then, action

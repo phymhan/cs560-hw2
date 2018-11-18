@@ -137,13 +137,13 @@ class RRT():
         # first, set state
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
-        print(quart)
+        # print(quart)
         self.agent.setState(state[0], quart)
         # self.agent.setState([5,5,0], quart)
         # time.sleep(5)
         print('setting done.')
         currState = self.agent.getState()
-        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
+        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         print('action')
         # print('setting done. performing action...')
         # then, action
@@ -392,8 +392,6 @@ def main(opt):
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
     initState = ([-8, -6, 0.1], np.deg2rad(opt.yaw))
     control = (opt.speed, opt.angle, opt.duration)
-    initYaw = agent.getState()[1]
-    print('init yaw = ', np.rad2deg(initYaw))
     rrt.perform_control(initState, control)
     rrt.agent.action(0, 0, 1)
     # path = rrt.Planning(animation=opt.show_animation)
