@@ -448,6 +448,7 @@ class RRT():
         initState = ([self.start.x, self.start.y, Z_VALUE], self.start.yaw)
         self.set_state(initState)
         for control in controls:
+            print('--> action: speed %.1f, angle %.1f, duration %.1f' % (control[0], control[1], control[2]))
             self.agent.action(*control)
             time.sleep(control[2])
         self.stop()

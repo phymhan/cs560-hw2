@@ -52,7 +52,7 @@ class Gazebo:
     roll = euler[0]
     pitch = euler[1]
     yaw = euler[2]
-    print('------------- xyz = ',xyz)
+    # print('------------- xyz = ',xyz)
     return xyz, yaw
 
 
