@@ -381,7 +381,7 @@ def main(opt):
     print("Start rrt start planning")
 
     # Set Initial parameters
-    start = [-8., -6., np.deg2rad(90.)]
+    start = [0, -4, np.deg2rad(90.)]
     goal = [8., 4., np.deg2rad(0.0)]
     # goal = [-8, 5, np.deg2rad(90)]
 
@@ -390,8 +390,10 @@ def main(opt):
     rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=None,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
-    initState = ([-8, -6, 0.1], math.pi/2)
+    initState = ([-8, -6, 0.1], np.deg2rad(opt.yaw))
     control = (opt.speed, opt.angle, opt.duration)
+    initYaw = agent.getState()[1]
+    print('init yaw = ', np.rad2deg(initYaw))
     rrt.perform_control(initState, control)
     rrt.agent.action(0, 0, 1)
     # path = rrt.Planning(animation=opt.show_animation)
@@ -402,6 +404,7 @@ if __name__ == '__main__':
     parser.add_argument('speed', type=float)
     parser.add_argument('angle', type=float)
     parser.add_argument('duration', type=float)
+    parser.add_argument('yaw', type=float, default=90)
     parser.add_argument('--no_star', action='store_true')
     parser.add_argument('--show_animation', action='store_true')
     parser.add_argument('--goal_sample_rate', type=float, default=10)
