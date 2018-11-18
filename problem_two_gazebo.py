@@ -77,7 +77,7 @@ class RRT():
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
-            print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
+            print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
             control = self.sample_control(currState)
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
@@ -130,6 +130,22 @@ class RRT():
 
         return speed, angle, duration
     
+    def calc_control(self, srcState, tarState):
+        directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
+        # directPathAngle = self.pi_2_pi(directPathAngle)
+        speed = random.uniform(0.5, 2)
+        angle = directPathAngle - srcState[1]
+        duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        if abs(angle) > math.pi/2:
+            speed *= -1
+            if angle > 0:
+                angle = math.pi-abs(angle)
+            else:
+                angle = abs(angle)-math.pi
+        if abs(angle) > MAX_ANGLE:
+            angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
+        return speed, 0, 1
+    
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
 
@@ -167,22 +183,6 @@ class RRT():
     #     speed = 1
     #     angle = srcNode.yaw - directPathAngle
     #     return speed, angle, math.sqrt((tarNode.y-srcNode.y)**2+(tarNode.x-srcNode.x)**2)/speed
-
-    def calc_control(self, srcState, tarState):
-        directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
-        # directPathAngle = self.pi_2_pi(directPathAngle)
-        speed = random.uniform(0.5, 2)
-        angle = directPathAngle - srcState[1]
-        duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
-        if abs(angle) > math.pi/2:
-            speed *= -1
-            if angle > 0:
-                angle = math.pi-abs(angle)
-            else:
-                angle = abs(angle)-math.pi
-        if abs(angle) > MAX_ANGLE:
-            angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
-        return speed, angle, 1
 
     # def choose_parent(self, newNode, nearinds):
     #     if len(nearinds) == 0:
