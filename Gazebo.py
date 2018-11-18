@@ -19,25 +19,27 @@ class Gazebo:
   def __init__(self):
     rospy.init_node('ackerman', anonymous=True)
     self.set_state_srv = rospy.ServiceProxy("/gazebo/set_model_state",SetModelState)
-    self.get_state_srv = rospy.ServiceProxy("/gazebo/get_model_state",GetModelState)
+    self.get_state = rospy.Subscriber("/gazebo/model_states", ModelState, self.callback)
     self.publisher = rospy.Publisher('/ackermann_cmd', AckermannDrive, queue_size=10)
-
+    self.position = None
+    self.quart = None
+    self.yaw = None
+    rospy.spin()
+    
+  def callback(self,res):
+    self.position = [res.pose.position.x,res.pose.position.y,res.pose.position.z]
+    self.quart = [res.orientation.x, res.orientation.y, res.orientation.z, res.orientation.w]
+    euler = tf.transformations.euler_from_quaternion(quart)
+    roll = euler[0]
+    pitch = euler[1]
+    self.yaw = euler[2]
 
   def getState(self):
     '''
       Out:
         yaw: steering angle
     '''
-    get_state = GetModelState()
-    get_state.model_name = "ackermann_vehicle"
-    res = self.get_state_srv(get_state)
-    xyz = [res.pose.position.x,res.pose.position.y,res.pose.position.z]
-    quart = [res.orientation.x, res.orientation.y, res.orientation.z, res.orientation.w]
-    euler = tf.transformations.euler_from_quaternion(quart)
-    roll = euler[0]
-    pitch = euler[1]
-    yaw = euler[2]
-    return xyz, yaw
+    return self.position, self.yaw
 
   def setState(self,xyz,quart):
     '''
