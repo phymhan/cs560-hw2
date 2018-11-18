@@ -132,7 +132,8 @@ class RRT():
         print('setting done. performing action...')
         # then, action
         self.agent.action(*control)
-        time.sleep(control[2])
+        # time.sleep(control[2])
+        time.sleep(5)
         print('action done.')
 
         # get new state
@@ -391,7 +392,7 @@ if __name__ == '__main__':
     parser.add_argument('--show_animation', action='store_true')
     parser.add_argument('--goal_sample_rate', type=float, default=10)
     parser.add_argument('--curvature', type=float, default=1.0)
-    parser.add_argument('--step_size', type=float, default=0.5)
+    parser.add_argument('--step_size', type=float, default=0.2)
     parser.add_argument('--sample_control', action='store_true')
     opt = parser.parse_args()
 
