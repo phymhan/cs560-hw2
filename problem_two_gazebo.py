@@ -23,7 +23,7 @@ import tf
 random.seed(0)
 np.random.seed(0)
 
-MAX_SPEED = 10
+MAX_SPEED = 2
 MAX_ANGLE = 30
 MAX_DURATION = 5
 CARLEN = 5
@@ -96,7 +96,7 @@ class RRT():
             # print(self.nodeList)
 
             if animation: # and i % 5 == 0:
-                self.DrawGraph(rnd=None)
+                self.DrawGraph(rnd=rnd)
 
         # generate coruse
         lastIndex = self.get_best_last_index()
