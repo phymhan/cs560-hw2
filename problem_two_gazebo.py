@@ -77,15 +77,11 @@ class RRT():
             # sample a new rnd
             # nind = self.GetNearestListIndex(self.nodeList, rnd)
 
-            q = self.euler2quart((0, 0, math.pi))
-            self.agent.setState([3,4,0.1], q)
-            s = self.agent.getState()
-            print('--------------', s[0])
-            print('==============', s[1])
-
-
-
-
+            # q = self.euler2quart((0, 0, math.pi))
+            # self.agent.setState([3,4,0.1], q)
+            # s = self.agent.getState()
+            # print('--------------', s[0])
+            # print('==============', s[1])
 
             nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
@@ -106,7 +102,7 @@ class RRT():
             print('--> new node inserted')
             # print(self.nodeList)
 
-            if animation and i % 5 == 0:
+            if animation: # and i % 5 == 0:
                 self.DrawGraph(rnd=None)
 
         # generate coruse
@@ -140,8 +136,8 @@ class RRT():
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
         print(quart)
-        # self.agent.setState(state[0], quart)
-        self.agent.setState([5,5,0], quart)
+        self.agent.setState(state[0], quart)
+        # self.agent.setState([5,5,0], quart)
         time.sleep(5)
         print('setting done.')
         print('confirm state:')
