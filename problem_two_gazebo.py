@@ -95,6 +95,8 @@ class RRT():
             
             # add new node to the tree
             self.nodeList.append(newNode)
+            print('--> new node inserted')
+            print(self.nodeList)
 
             if animation and i % 5 == 0:
                 self.DrawGraph(rnd=rnd)
