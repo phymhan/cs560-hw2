@@ -24,7 +24,7 @@ random.seed(0)
 np.random.seed(0)
 
 MAX_SPEED = 1
-MAX_ANGLE = 15
+MAX_ANGLE = 30
 MAX_DURATION = 2
 CARLEN = 5
 Z_VALUE = 0.1
@@ -150,7 +150,7 @@ class RRT():
                 angle = abs(angle)-math.pi
         if abs(angle) > MAX_ANGLE:
             angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
-        return speed, angle, duration
+        return speed, angle/2, duration
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
