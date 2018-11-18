@@ -147,6 +147,7 @@ class RRT():
         speed = random.uniform(0.1, MAX_DURATION)
         angle = directPathAngle - srcState[1]
         duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        duration = min(duration, MAX_DURATION)
         if abs(angle) > math.pi/2:
             speed *= -1
             if angle > 0:
