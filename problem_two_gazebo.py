@@ -308,7 +308,7 @@ class RRT():
         reeds_shepp_path_planning.plot_arrow(
             self.end.x, self.end.y, self.end.yaw)
 
-        plt.axis([-2, 15, -2, 15])
+        plt.axis([self.minrand_x, self.maxrand_x, self.minrand_y, self.maxrand_y])
         plt.grid(True)
         plt.pause(0.01)
 
@@ -382,12 +382,12 @@ def main(opt):
         return
 
     # Draw final path
-    if opt.show_animation:
-        rrt.DrawGraph()
-        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
-        plt.grid(True)
-        plt.pause(0.001)
-        plt.show()
+    # if opt.show_animation:
+    #     rrt.DrawGraph()
+    #     plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
+    #     plt.grid(True)
+    #     plt.pause(0.001)
+    #     plt.show()
 
 
 if __name__ == '__main__':
