@@ -124,7 +124,10 @@ class RRT():
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
         angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
-        # return 1, math.pi, 5
+        
+        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 2**2:
+            return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
+
         return speed, angle, duration
     
     def euler2quart(self, euler):
