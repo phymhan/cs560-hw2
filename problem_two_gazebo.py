@@ -80,7 +80,8 @@ class RRT():
             q = self.euler2quart((0, 0, 45))
             self.agent.setState([3,4,0.1], q)
             s = self.agent.getState()
-            print('--------------', s)
+            print('--------------', s[0])
+            print('==============', np.rad2deg(s[1]))
 
 
 
