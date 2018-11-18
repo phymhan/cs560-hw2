@@ -25,7 +25,7 @@ np.random.seed(0)
 
 MAX_SPEED = 2
 MAX_ANGLE = 60
-MAX_DURATION = 10
+MAX_DURATION = 2
 CARLEN = 1
 USE_DEG = True
 Z_VALUE = 0
