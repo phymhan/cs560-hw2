@@ -25,8 +25,8 @@ np.random.seed(0)
 
 MAX_SPEED = 2
 MAX_ANGLE = 60
-MAX_DURATION = 2
-CARLEN = 1
+MAX_DURATION = 5
+CARLEN = 5
 USE_DEG = True
 Z_VALUE = 0.1
 
@@ -73,17 +73,10 @@ class RRT():
 
         self.nodeList = [self.start]
         for i in range(self.maxIter):
-            # rnd = self.get_random_point()
-            # sample a new rnd
-            # nind = self.GetNearestListIndex(self.nodeList, rnd)
+            rnd = self.get_random_point()
+            nind = self.GetNearestListIndex(self.nodeList, rnd)
 
-            # q = self.euler2quart((0, 0, math.pi))
-            # self.agent.setState([3,4,0.1], q)
-            # s = self.agent.getState()
-            # print('--------------', s[0])
-            # print('==============', s[1])
-
-            nind = len(self.nodeList)-1
+            # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
             print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
