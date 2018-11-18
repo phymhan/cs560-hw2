@@ -159,14 +159,20 @@ class RRT():
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
-
-    def perform_control(self, state, control):
-        print('setting state...')
-        # first, set state
+    
+    def set_state(self, state):
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
         print(quart)
         self.agent.setState(state[0], quart)
+    
+    def get_state(self):
+        return self.agent.getState()
+
+    def perform_control(self, state, control):
+        print('setting state...')
+        # first, set state
+        self.set_state(state)
         # self.agent.setState([5,5,0], quart)
         # time.sleep(5)
         print('setting done.')
@@ -440,11 +446,14 @@ class RRT():
         print('REPLAY')
         # set init state
         initState = ([self.start.x, self.start.y, Z_VALUE], self.start.yaw)
-        quart = self.euler2quart((0, 0, initState[1]))
-        self.agent.setState(initState[0], quart)
+        self.set_state(initState)
         for control in controls:
             self.agent.action(*control)
             time.sleep(control[2])
+        self.stop()
+    
+    def stop(self):
+        self.set_state(self.get_state())
         self.agent.action(0, 0, 60)
 
 class Node():
@@ -488,7 +497,15 @@ def main(opt):
     rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent, maxIter=100000, opt=opt)
-    control, path = rrt.Planning(animation=opt.show_animation)
+    
+    # path planning
+    if not opt.load_and_replay:
+        control, path = rrt.Planning(animation=opt.show_animation)
+    else:
+        print('=-=-=-=-=-=-=-=-= load from npy file')
+        rrt.load_tree()
+        control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
+    
     if len(path) > 1:
         # save
         rrt.save_tree()
@@ -524,6 +541,7 @@ if __name__ == '__main__':
     parser.add_argument('--step_size', type=float, default=0.2)
     parser.add_argument('--sample_control', action='store_true')
     parser.add_argument('--tree_filename', type=str, default='tree.npy')
+    parser.add_argument('--load_and_replay', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging
