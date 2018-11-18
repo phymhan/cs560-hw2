@@ -170,10 +170,19 @@ class RRT():
 
     def calc_control(self, srcState, tarState):
         directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
-        directPathAngle = self.pi_2_pi(directPathAngle)
+        # directPathAngle = self.pi_2_pi(directPathAngle)
         speed = 1
-        angle = srcState[1] - directPathAngle
-        return speed, -angle, 1  # math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        angle = directPathAngle - srcState[1]
+        duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
+        if abs(angle) > math.pi/2:
+            speed *= -1
+            if angle > 0:
+                angle = math.pi-abs(angle)
+            else:
+                angle = abs(angle)-math.pi
+        if abs(angle) > MAX_ANGLE:
+            angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
+        return speed, angle, 1
 
     # def choose_parent(self, newNode, nearinds):
     #     if len(nearinds) == 0:
