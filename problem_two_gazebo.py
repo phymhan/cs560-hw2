@@ -171,7 +171,7 @@ class RRT():
     def calc_control(self, srcState, tarState):
         directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
         # directPathAngle = self.pi_2_pi(directPathAngle)
-        speed = 1
+        speed = random.uniform(0.5, 2)
         angle = directPathAngle - srcState[1]
         duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
         if abs(angle) > math.pi/2:
