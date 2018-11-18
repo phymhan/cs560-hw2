@@ -26,7 +26,8 @@ np.random.seed(0)
 
 MAX_SPEED = 1
 MAX_ANGLE = 15
-MAX_DURATION = 2
+MIN_DURATION = 1
+MAX_DURATION = 5
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
@@ -129,7 +130,7 @@ class RRT():
         speed = random.uniform(0, MAX_SPEED)
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
         angle = np.deg2rad(angle)
-        duration = random.uniform(0, MAX_DURATION)
+        duration = random.uniform(MIN_DURATION, MAX_DURATION)
         
         if random.random() < 0.5 and (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3.5**2:
             return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
