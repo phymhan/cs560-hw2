@@ -125,7 +125,7 @@ class RRT():
         angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
         
-        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 10**2:
+        if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3**2:
             if random.random() < 1:
                 control = self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
             else:
@@ -150,7 +150,7 @@ class RRT():
                 angle = abs(angle)-math.pi
         if abs(angle) > MAX_ANGLE:
             angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
-        return speed, 0, 1
+        return speed, angle, duration
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
