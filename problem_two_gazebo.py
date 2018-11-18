@@ -128,8 +128,16 @@ class RRT():
         # first, set state
         euler = (0, 0, state[1])
         quart = self.euler2quart(euler)
-        self.agent.setState(state[0], quart)
-        print('setting done. performing action...')
+        print(quart)
+        # self.agent.setState(state[0], quart)
+        self.agent.setState([5,5,0], quart)
+        time.sleep(5)
+        print('setting done.')
+        print('confirm state:')
+        currState = self.agent.getState()
+        print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
+        print('action')
+        # print('setting done. performing action...')
         # then, action
         self.agent.action(*control)
         # time.sleep(control[2])
