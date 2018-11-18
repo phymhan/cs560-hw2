@@ -404,7 +404,7 @@ if __name__ == '__main__':
     parser.add_argument('--show_animation', action='store_true')
     parser.add_argument('--goal_sample_rate', type=float, default=10)
     parser.add_argument('--curvature', type=float, default=1.0)
-    parser.add_argument('--step_size', type=float, default=0.1)
+    parser.add_argument('--step_size', type=float, default=0.5)
     parser.add_argument('--sample_control', action='store_true')
     opt = parser.parse_args()
 
