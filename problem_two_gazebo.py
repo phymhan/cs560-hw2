@@ -23,7 +23,7 @@ import tf
 random.seed(0)
 np.random.seed(0)
 
-MAX_SPEED = 1
+MAX_SPEED = 2
 MAX_ANGLE = 60
 MAX_DURATION = 10
 CARLEN = 1
@@ -118,7 +118,8 @@ class RRT():
         if not USE_DEG:
             angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
-        return speed, angle, duration
+        return 1, math.pi, 5
+        # return speed, angle, duration
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
@@ -171,6 +172,9 @@ class RRT():
     def steer(self, rnd, nind):
 
         nearestNode = self.nodeList[nind]
+        print('--> nind: %d' % nind)
+        print(self.nodeList)
+        print(nearestNode)
 
         px, py, pyaw, mode, clen = reeds_shepp_path_planning.reeds_shepp_path_planning(
             nearestNode.x, nearestNode.y, nearestNode.yaw, rnd.x, rnd.y, rnd.yaw, self.curvature, self.step_size)
