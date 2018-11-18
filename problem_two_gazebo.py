@@ -128,6 +128,8 @@ class RRT():
         if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 10**2:
             if random.random() < 0.5:
                 control = self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
+            else:
+                control = (speed, angle, duration)
             return control[0], control[1], control[2]
 
         return speed, angle, duration
