@@ -25,9 +25,9 @@ random.seed(0)
 np.random.seed(0)
 
 MAX_SPEED = 1
-MAX_ANGLE = 30
-MAX_DURATION = 2
-CARLEN = 5
+MAX_ANGLE = 20
+MAX_DURATION = 1
+CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
 
@@ -181,7 +181,7 @@ class RRT():
         # print('setting done. performing action...')
         # then, action
         self.agent.action(*control)
-        time.sleep(control[2])
+        time.sleep(control[2]+3)
         # time.sleep(MAX_DURATION)
         print('action done.')
 
