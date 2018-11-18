@@ -25,7 +25,7 @@ np.random.seed(0)
 
 MAX_SPEED = 2
 MAX_ANGLE = 30
-MAX_DURATION = 5
+MAX_DURATION = 2
 CARLEN = 5
 USE_DEG = True
 Z_VALUE = 0.1
@@ -50,8 +50,6 @@ class RRT():
         """
         self.start = Node(start[0], start[1], start[2])
         self.end = Node(goal[0], goal[1], goal[2])
-        # self.minrand = randArea[0]
-        # self.maxrand = randArea[1]
         self.minrand_x = randArea[0]
         self.maxrand_x = randArea[1]
         self.minrand_y = randArea[2]
@@ -140,8 +138,8 @@ class RRT():
         # print('setting done. performing action...')
         # then, action
         self.agent.action(*control)
-        # time.sleep(control[2])
-        time.sleep(5)
+        time.sleep(control[2])
+        # time.sleep(MAX_DURATION)
         print('action done.')
 
         # get new state
@@ -149,6 +147,7 @@ class RRT():
         print('got new state')
         print(state_new)
         new_node = Node(state_new[0][0], state_new[0][1], state_new[1])
+        new_node.control = control
         return new_node
 
     def choose_parent(self, newNode, nearinds):
@@ -181,26 +180,33 @@ class RRT():
         return (angle + math.pi) % (2 * math.pi) - math.pi
 
     def steer(self, rnd, nind):
+        # # old
+        # nearestNode = self.nodeList[nind]
 
-        nearestNode = self.nodeList[nind]
-        print('--> nind: %d' % nind)
+        # px, py, pyaw, mode, clen = reeds_shepp_path_planning.reeds_shepp_path_planning(
+        #     nearestNode.x, nearestNode.y, nearestNode.yaw, rnd.x, rnd.y, rnd.yaw, self.curvature, self.step_size)
 
-        px, py, pyaw, mode, clen = reeds_shepp_path_planning.reeds_shepp_path_planning(
-            nearestNode.x, nearestNode.y, nearestNode.yaw, rnd.x, rnd.y, rnd.yaw, self.curvature, self.step_size)
+        # if px is None:
+        #     return None
 
-        if px is None:
-            return None
+        # newNode = copy.deepcopy(nearestNode)
+        # newNode.x = px[-1]
+        # newNode.y = py[-1]
+        # newNode.yaw = pyaw[-1]
 
-        newNode = copy.deepcopy(nearestNode)
-        newNode.x = px[-1]
-        newNode.y = py[-1]
-        newNode.yaw = pyaw[-1]
+        # newNode.path_x = px
+        # newNode.path_y = py
+        # newNode.path_yaw = pyaw
+        # newNode.cost += sum([abs(c) for c in clen])
+        # newNode.parent = nind
 
-        newNode.path_x = px
-        newNode.path_y = py
-        newNode.path_yaw = pyaw
-        newNode.cost += sum([abs(c) for c in clen])
-        newNode.parent = nind
+        # new
+        srcNode = self.nodeList[nind]
+        tarNode = rnd
+
+        newNode = copy.deepcopy(srcNode)
+        newNode.cost = srcNode.cost + newNode.control[0]*newNode.control[2]
+        newNode.parent = ind
 
         return newNode
 
@@ -300,7 +306,9 @@ class RRT():
             plt.plot(rnd.x, rnd.y, "^k")
         for node in self.nodeList:
             if node.parent is not None:
-                plt.plot(node.path_x, node.path_y, "-g")
+                # plt.plot(node.path_x, node.path_y, "-g")
+                pNode = self.nodeList[node.parent]
+                plt.plot([pNode.x, node.x], [pNode.y, node.y], "-g")
                 #  plt.plot([node.x, self.nodeList[node.parent].x], [
                 #  node.y, self.nodeList[node.parent].y], "-g")
 
@@ -320,11 +328,11 @@ class RRT():
         #  input()
 
     def GetNearestListIndex(self, nodeList, rnd):
-        # dlist = [(node.x - rnd.x) ** 2 +
-        #          (node.y - rnd.y) ** 2 +
-        #          (node.yaw - rnd.yaw) ** 2 for node in nodeList]
         dlist = [(node.x - rnd.x) ** 2 +
-                 (node.y - rnd.y) ** 2 for node in nodeList]
+                 (node.y - rnd.y) ** 2 +
+                 (node.yaw - rnd.yaw) ** 2 for node in nodeList]
+        # dlist = [(node.x - rnd.x) ** 2 +
+        #          (node.y - rnd.y) ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
 
         return minind
@@ -354,6 +362,7 @@ class Node():
         self.path_x = []
         self.path_y = []
         self.path_yaw = []
+        self.control = []
         self.cost = 0.0
         self.parent = None
 
