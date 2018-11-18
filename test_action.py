@@ -380,40 +380,18 @@ class Node():
 def main(opt):
     print("Start rrt start planning")
 
-    # ====Search Path with RRT====
-    #  obstacleList = [
-    #  (5, 5, 1),
-    #  (3, 6, 2),
-    #  (3, 8, 2),
-    #  (3, 10, 2),
-    #  (7, 5, 2),
-    #  (9, 5, 2)
-    #  ]  # [x,y,size(radius)]
-    obstacleList = []  # [x,y,size(radius)]
-
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
     goal = [8., 4., np.deg2rad(0.0)]
     # goal = [-8, 5, np.deg2rad(90)]
 
     agent = Gazebo()
+    agent.action(1, 0, 2)
 
-    rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
-              goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
-              curvature=opt.curvature, step_size=opt.step_size, agent=agent)
-    path = rrt.Planning(animation=opt.show_animation)
-
-    if path is None:
-        print('Path not found. Maximum # of iterations exceeded.')
-        return
-
-    # Draw final path
-    # if opt.show_animation:
-    #     rrt.DrawGraph()
-    #     plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
-    #     plt.grid(True)
-    #     plt.pause(0.001)
-    #     plt.show()
+    # rrt = RRT(np.array(start), np.array(goal), randArea=[-9, 10, -7.5, 6.5], obstacleList=obstacleList,
+    #           goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
+    #           curvature=opt.curvature, step_size=opt.step_size, agent=agent)
+    # path = rrt.Planning(animation=opt.show_animation)
 
 
 if __name__ == '__main__':
@@ -425,10 +403,5 @@ if __name__ == '__main__':
     parser.add_argument('--step_size', type=float, default=0.2)
     parser.add_argument('--sample_control', action='store_true')
     opt = parser.parse_args()
-
-    # set defaults for debuging
-    opt.no_star = True
-    # opt.show_animation = False
-    opt.curvature = math.tan(np.deg2rad(MAX_ANGLE)) / CARLEN
 
     main(opt)
