@@ -27,7 +27,7 @@ MAX_SPEED = 2
 MAX_ANGLE = 30
 MAX_DURATION = 2
 CARLEN = 5
-USE_DEG = True
+USE_DEG = FALSE
 Z_VALUE = 0.1
 TOL_GOAL = 1
 
@@ -123,8 +123,7 @@ class RRT():
         # state: (xyz, yaw)
         speed = random.uniform(0, MAX_SPEED)
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
-        if not USE_DEG:
-            angle = np.deg2rad(angle)
+        angle = np.deg2rad(angle)
         duration = random.uniform(0, MAX_DURATION)
         # return 1, math.pi, 5
         return speed, angle, duration
