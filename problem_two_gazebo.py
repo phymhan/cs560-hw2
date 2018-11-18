@@ -72,7 +72,7 @@ class RRT():
 
         self.nodeList = [self.start]
         for i in range(self.maxIter):
-            if True:
+            if False:
                 rnd, nind = self.get_voronoi_point()
             else:
                 rnd = self.get_random_point()
@@ -273,7 +273,7 @@ class RRT():
         points = np.random.rand(1000, 2)
         points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
         points -= np.array([self.maxrand_x+self.minrand_x, self.maxrand_y+self.minrand_y])/2
-        dists = 
+        dists = None
 
     def get_best_last_index(self):
         #  print("get_best_last_index")
