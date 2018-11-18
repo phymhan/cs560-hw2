@@ -126,7 +126,7 @@ class RRT():
         duration = random.uniform(0, MAX_DURATION)
         
         if (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3**2:
-            if random.random() < 0.5:
+            if random.random() < 1:
                 control = self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
             else:
                 control = (speed, angle, duration)
@@ -136,6 +136,8 @@ class RRT():
     
     def calc_control(self, srcState, tarState):
         directPathAngle = math.atan2(tarState[0][1]-srcState[0][1], tarState[0][0]-srcState[0][0])
+        print('--------------------------')
+        print('direct angle: %.1f' % np.rad2deg(directPathAngle))
         # directPathAngle = self.pi_2_pi(directPathAngle)
         speed = random.uniform(0.5, 2)
         angle = directPathAngle - srcState[1]
