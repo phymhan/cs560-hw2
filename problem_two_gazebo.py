@@ -108,7 +108,7 @@ class RRT():
     
     def get_state_from_index(self, nind):
         node = self.nodeList[nind]
-        return [node.x, node.y, node.z], node.yaw
+        return [node.x, node.y, Z_VALUE], node.yaw
 
     def sample_control(self, currState):
         # node : node
