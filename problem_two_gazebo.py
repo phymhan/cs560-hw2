@@ -204,7 +204,7 @@ class RRT():
         srcNode = self.nodeList[nind]
         tarNode = rnd
 
-        newNode = copy.deepcopy(srcNode)
+        newNode = copy.deepcopy(rnd)
         newNode.cost = srcNode.cost + newNode.control[0]*newNode.control[2]
         newNode.parent = ind
 
