@@ -320,9 +320,11 @@ class RRT():
         #  input()
 
     def GetNearestListIndex(self, nodeList, rnd):
+        # dlist = [(node.x - rnd.x) ** 2 +
+        #          (node.y - rnd.y) ** 2 +
+        #          (node.yaw - rnd.yaw) ** 2 for node in nodeList]
         dlist = [(node.x - rnd.x) ** 2 +
-                 (node.y - rnd.y) ** 2 +
-                 (node.yaw - rnd.yaw) ** 2 for node in nodeList]
+                 (node.y - rnd.y) ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
 
         return minind
