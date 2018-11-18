@@ -495,7 +495,7 @@ def main(opt):
 
         # draw
         rrt.DrawGraph()
-        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
+        plt.plot([x for (x, y, _) in path], [y for (x, y, _) in path], '-r')
         plt.pause(0.001)
         plt.show()
 
