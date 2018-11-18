@@ -283,7 +283,7 @@ class RRT():
         #  r = self.expandDis * 5.0
         dlist = [(node.x - newNode.x) ** 2 +
                  (node.y - newNode.y) ** 2 +
-                 (node.yaw - newNode.yaw) ** 2
+                 (node.yaw - newNode.yaw) ** 2 * 0
                  for node in self.nodeList]
         nearinds = [dlist.index(i) for i in dlist if i <= r ** 2]
         return nearinds
