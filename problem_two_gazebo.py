@@ -74,10 +74,9 @@ class RRT():
         self.nodeList = [self.start]
         for i in range(self.maxIter):
             # rnd = self.get_random_point()
-            rnd = len(self.nodeList)-1
-
             # sample a new rnd
-            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            # nind = self.GetNearestListIndex(self.nodeList, rnd)
+            nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
             print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], currState[1]))
@@ -88,9 +87,6 @@ class RRT():
             # add an edge: nodeList[nind] -> new_rnd
             newNode = self.steer(new_rnd, nind)
 
-            nind = self.GetNearestListIndex(self.nodeList, rnd)
-
-            newNode = self.steer(rnd, nind)
             if newNode is None:
                 continue
             
