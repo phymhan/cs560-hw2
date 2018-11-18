@@ -391,13 +391,16 @@ def main(opt):
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent)
     initState = ([-8, -6, 0.1], math.pi/2)
-    control = (2, -60, 2)
+    control = (opt.speed, opt.angle, opt.duration)
     rrt.perform_control(initState, control)
     # path = rrt.Planning(animation=opt.show_animation)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('speed', type=float)
+    parser.add_argument('angle', type=float)
+    parser.add_argument('duration', type=float)
     parser.add_argument('--no_star', action='store_true')
     parser.add_argument('--show_animation', action='store_true')
     parser.add_argument('--goal_sample_rate', type=float, default=10)
