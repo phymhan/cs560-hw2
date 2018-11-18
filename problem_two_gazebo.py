@@ -78,6 +78,8 @@ class RRT():
             else:
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
+            self.DrawGraph(rnd=rnd)
+            time.sleep(1)
 
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
@@ -90,6 +92,8 @@ class RRT():
             # add an edge: nodeList[nind] -> new_rnd
             newNode = self.steer(new_rnd, nind)
 
+            self.DrawGraph(rnd=rnd)
+
             if newNode is None:
                 continue
             
@@ -99,9 +103,6 @@ class RRT():
                 # force stop
                 self.agent.action(0, 0, 1)
                 break
-
-            if animation: # and i % 5 == 0:
-                self.DrawGraph(rnd=rnd)
 
         # generate coruse
         lastIndex = self.GetNearestListIndex(self.nodeList, self.end)
