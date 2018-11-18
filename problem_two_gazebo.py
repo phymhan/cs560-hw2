@@ -28,7 +28,7 @@ MAX_ANGLE = 60
 MAX_DURATION = 2
 CARLEN = 1
 USE_DEG = True
-Z_VALUE = 0
+Z_VALUE = 0.1
 
 
 class RRT():
@@ -76,6 +76,16 @@ class RRT():
             # rnd = self.get_random_point()
             # sample a new rnd
             # nind = self.GetNearestListIndex(self.nodeList, rnd)
+
+            q = self.euler2quart((0, 0, 45))
+            self.agent.setState([3,4,0.1], q)
+            s = self.agent.getState()
+            print('--------------', s)
+
+
+
+
+
             nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
