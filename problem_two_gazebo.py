@@ -139,7 +139,7 @@ class RRT():
         print('--------------------------')
         print('direct angle: %.1f' % np.rad2deg(directPathAngle))
         # directPathAngle = self.pi_2_pi(directPathAngle)
-        speed = random.uniform(0.5, 2)
+        speed = random.uniform(0.1, MAX_DURATION)
         angle = directPathAngle - srcState[1]
         duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
         if abs(angle) > math.pi/2:
@@ -423,8 +423,8 @@ def main(opt):
 
     # Set Initial parameters
     start = [-8., -6., np.deg2rad(90.)]
-    # goal = [8., 4., np.deg2rad(0.0)]
-    goal = [-6, 5, np.deg2rad(90)]
+    goal = [8., 4., np.deg2rad(0.0)]
+    # goal = [-6, 5, np.deg2rad(90)]
 
     agent = Gazebo()
 
