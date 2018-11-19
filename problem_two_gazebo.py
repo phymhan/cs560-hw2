@@ -79,7 +79,7 @@ class RRT():
             else:
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
-            nind = self.avoid_dead_end(self.nodeList, nind)
+            nind = self.avoid_dead_end(self.nodeList, nind, rnd)
             self.DrawGraph(rnd=rnd)
             time.sleep(1)
 
