@@ -626,6 +626,7 @@ def generate_paths(npyfile):
     for i in range(len(t)):
         if t[i][1] >= 6.5 and t[i][2] >= 3.5:
             goalind.append(i)
+    print('=== goal === ', goalind)
     for j in range(50):
         g = random.choice(goalind)
         # get path
@@ -638,6 +639,7 @@ def generate_paths(npyfile):
         for i in range(L):
             if path[L-i-1][1] <= -5 and path[L-i-1][2] <= -2.5:
                 startind.append(i)
+        print('=== start === ', startind)
         s = random.choice(startind)
         t_new = copy.deepcopy(t)
         t_new[s][0] = None
