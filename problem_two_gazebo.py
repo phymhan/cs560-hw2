@@ -624,7 +624,7 @@ def generate_paths(npyfile):
     # select goal
     goalind = []
     for i in range(len(t)):
-        if t[i][1] >= 6.5 and t[i][2] >= 3.5:
+        if t[i][1] >= 6 and t[i][2] >= 3:
             goalind.append(i)
     print('=== goal === ', goalind)
     for j in range(50):
