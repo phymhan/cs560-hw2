@@ -652,6 +652,7 @@ def generate_paths(npyfile):
         filename = npyfile + 'path%d.npz' % j
         with open(filename, 'w') as f:
             np.savez(f, tree=t_new, goal=g, start=s)
+        print('--> path#%d' % j)
 
 
 def main(opt):
@@ -672,6 +673,10 @@ def main(opt):
     start = [-8., -6., np.deg2rad(90.)]
     goal = [8., 4., np.deg2rad(0.0)]
     # goal = [-6, 5, np.deg2rad(90)]
+
+    if opt.generate_path:
+        generate_paths(opt.npy_filename)
+        return
 
     agent = Gazebo()
 
@@ -728,6 +733,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_voronoi', action='store_true')
     parser.add_argument('--greedy_voronoi', action='store_true')
     parser.add_argument('--continue_train', action='store_true')
+    parser.add_argument('--generate_path', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging
