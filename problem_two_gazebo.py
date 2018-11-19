@@ -24,10 +24,11 @@ from scipy.stats import mode
 random.seed(0)
 np.random.seed(0)
 
-MAX_SPEED = 2
+MIN_SPEED = 2
+MAX_SPEED = 10
 MAX_ANGLE = 30
-MIN_DURATION = 1
-MAX_DURATION = 3
+MIN_DURATION = 0.1
+MAX_DURATION = 2
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
@@ -146,7 +147,7 @@ class RRT():
         if random.random() < 0.1:
             return self.calc_control(currState, rndState)
         # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
-        speed = random.uniform(0, MAX_SPEED)
+        speed = random.uniform(MIN_SPEED, MAX_SPEED)
         if random.random() < 0.5:
             speed = -speed
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
