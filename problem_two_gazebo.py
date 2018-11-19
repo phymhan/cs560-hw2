@@ -74,7 +74,7 @@ class RRT():
 
         self.nodeList = [self.start]
         for i in range(self.maxIter):
-            if False:
+            if self.opt.use_voronoi:
                 rnd, nind = self.get_voronoi_point()
             else:
                 rnd = self.get_random_point()
@@ -566,6 +566,7 @@ if __name__ == '__main__':
     parser.add_argument('--sample_control', action='store_true')
     parser.add_argument('--tree_filename', type=str, default='tree_naive.npy')
     parser.add_argument('--load_and_replay', action='store_true')
+    parser.add_argument('--use_voronoi', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging
