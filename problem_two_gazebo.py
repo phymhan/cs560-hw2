@@ -194,6 +194,7 @@ class RRT():
         time.sleep(control[2])
         # time.sleep(MAX_DURATION)
         print('action done.')
+        self.agent.action(0, 0, 0.1)
 
         # get new state
         state_new = self.agent.getState()
@@ -583,7 +584,6 @@ if __name__ == '__main__':
     parser.add_argument('--goal_sample_rate', type=float, default=10)
     parser.add_argument('--curvature', type=float, default=1.0)
     parser.add_argument('--step_size', type=float, default=0.2)
-    parser.add_argument('--sample_control', action='store_true')
     parser.add_argument('--tree_filename', type=str, default='tree_naive.npy')
     parser.add_argument('--load_and_replay', action='store_true')
     parser.add_argument('--use_voronoi', action='store_true')
