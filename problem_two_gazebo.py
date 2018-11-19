@@ -103,7 +103,7 @@ class RRT():
                 control = ai_control
             if cnt < 50:
                 control = self.clamp_control(control)
-                new_ind = self.perform_control(currState, control)
+                new_rnd = self.perform_control(currState, control)
                 newNode = self.steer(new_rnd, nind)
                 self.expand_tree(newNode)
                 nind = len(self.nodeList) - 1
