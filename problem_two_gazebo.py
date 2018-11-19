@@ -31,6 +31,7 @@ MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
+MAX_NUM_DEGREE = 10
 
 
 def voronoi_dist(p1, p2):
@@ -87,13 +88,17 @@ class RRT():
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
             nind = self.avoid_dead_end(self.nodeList, nind, rnd)
-            self.DrawGraph(rnd=rnd, nind=nind)
-            
-            # nind = len(self.nodeList)-1
-            print('nearest index: %d' % nind)
-            currState = self.get_state_from_index(nind)
-            rndState = self.get_state_from_node(rnd)
-            print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
+            if nind is None:
+                # AI
+                print('==> current state:', self.get_state())
+                control = raw_input('enter control (speed, angle, duration):')
+                control = [float(x) for x in control.split()]
+            else:
+                self.DrawGraph(rnd=rnd, nind=nind)
+                print('nearest index: %d' % nind)
+                currState = self.get_state_from_index(nind)
+                rndState = self.get_state_from_node(rnd)
+                print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
             control = self.sample_control(currState, rndState)
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
