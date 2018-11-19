@@ -82,13 +82,13 @@ class RRT():
             self.DrawGraph(rnd=rnd, nind=nind)
             nind = self.avoid_dead_end(self.nodeList, nind, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
-            time.sleep(1)
-
+            
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
             currState = self.get_state_from_index(nind)
+            rndState = self.get_state_from_node(rnd)
             print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
-            control = self.sample_control(currState)
+            control = self.sample_control(currState, rndState)
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
@@ -125,8 +125,11 @@ class RRT():
     def get_state_from_index(self, nind):
         node = self.nodeList[nind]
         return [node.x, node.y, Z_VALUE], node.yaw
+    
+    def get_state_from_node(self, rnd):
+        return [rnd.x, rnd.y, Z_VALUE], rnd.yaw
 
-    def sample_control(self, currState):
+    def sample_control(self, currState, rndState):
         # node : node
         # state: (xyz, yaw)
         # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
@@ -137,8 +140,10 @@ class RRT():
         angle = np.deg2rad(angle)
         duration = random.uniform(MIN_DURATION, MAX_DURATION)
         
-        if random.random() < 0.5 and (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3.5**2:
-            return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
+        # if random.random() < 0.5 and (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3.5**2:
+        #     return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
+        if random.random() < 0.5:
+            return self.calc_control(currState, rndState)
 
         return speed, angle, duration
     
