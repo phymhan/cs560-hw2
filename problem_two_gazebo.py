@@ -555,8 +555,8 @@ class RRT():
         tree = np.load(self.opt.tree_filename)
         if self.opt.tree_filename.endswith('.npz'):
             t = tree['tree']
-            s = tree['start']
-            g = tree['goal']
+            s = int(tree['start'])
+            g = int(tree['goal'])
             self.start = Node(t[s][1], t[s][2], t[s][3])
             self.end = Node(t[g][1], t[g][2], t[g][3])
         for a in tree:
