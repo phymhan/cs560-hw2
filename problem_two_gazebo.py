@@ -189,7 +189,7 @@ class RRT():
         return speed, angle/2, duration
     
     def clamp_control(self, control):
-        return random.random()*0.5*control[0], control[1], control[2] = random.random()*control[2]
+        return random.random()*0.5*control[0], control[1], random.random()*control[2]
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
