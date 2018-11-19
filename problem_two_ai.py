@@ -82,7 +82,9 @@ class RRT():
 
         self.nodeList = [self.start]
         for i in range(self.maxIter):
-            rnd, nind = self.get_voronoi_point()
+            # rnd, nind = self.get_voronoi_point()
+            nind = len(self.nodeList)-1
+            rnd = None
             self.DrawGraph(rnd=rnd, nind=nind)
             currState = self.get_state_from_index(nind)
             control = self.get_ai_control(nind)
