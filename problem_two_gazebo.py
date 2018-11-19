@@ -34,7 +34,7 @@ MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 2
-MAX_NUM_DEGREE = 5
+MAX_NUM_DEGREE = 10
 
 
 def voronoi_dist(p1, p2):
@@ -90,6 +90,9 @@ class RRT():
             else:
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
+            if cnt < 50:
+                nind = 1
+                rnd = None
             self.DrawGraph(rnd=rnd, nind=nind)
             nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
             currState = self.get_state_from_index(nind)
@@ -193,7 +196,7 @@ class RRT():
         return speed, angle/2, duration
     
     def clamp_control(self, control):
-        return random.random()*0.5*control[0], control[1], random.random()*0.2*control[2]
+        return random.random()*0.2*control[0], control[1], random.random()*0.1*control[2]
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
