@@ -467,10 +467,11 @@ class RRT():
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
             else:
-                dlist = [(node.x - rnd.x) ** 2 +
-                    (node.y - rnd.y) ** 2 for node in nodeList]
-                dlist[nind] = float('inf')
-                nind = dlist.index(min(dlist))
+                # dlist = [(node.x - rnd.x) ** 2 +
+                #     (node.y - rnd.y) ** 2 for node in nodeList]
+                # dlist[nind] = float('inf')
+                # nind = dlist.index(min(dlist))
+                nind = 0
             print('might be a dead end, re-select: %d' % nind)
         return nind
 
