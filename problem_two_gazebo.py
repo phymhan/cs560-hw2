@@ -431,6 +431,7 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
+            print('might be a dead end, re-select: %d' % nind)
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
             else:
@@ -438,6 +439,7 @@ class RRT():
                     (node.y - rnd.y) ** 2 for node in nodeList]
                 dlist[nind] = float('inf')
                 nind = dlist.index(min(dlist))
+            print('might be a dead end, re-select: %d' % nind)
         return nind
 
     # def CollisionCheck(self, node, obstacleList):
