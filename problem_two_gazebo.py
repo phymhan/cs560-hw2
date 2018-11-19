@@ -544,6 +544,7 @@ class RRT():
         print('==> current state:', currState)
         control = raw_input('enter control (speed, angle, duration):')
         control = [float(x) for x in control.split()]
+        control[2] = np.deg2rad(control[2])
         return control
 
 class Node():
