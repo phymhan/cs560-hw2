@@ -288,8 +288,8 @@ class RRT():
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
         # pind = random.choice(range(N))
-        print('===vvv',vor)
-        pind = mode(vor)[0]
+        print(vor)
+        print(mode(vor))
         nind = vor[pind]
         rnd = Node(points[pind][0], points[pind][1], 0)
         return rnd, nind
