@@ -550,9 +550,12 @@ class RRT():
             tree.append([node.parent, node.x, node.y, node.yaw, node.control[0], node.control[1], node.control[2]])
         np.save(self.opt.tree_filename, tree)
     
-    def load_tree(self):
+    def load_tree(self, filename=None):
         nodeList = []
-        tree = np.load(self.opt.tree_filename)
+        if filename is None:
+            tree = np.load(self.opt.tree_filename)
+        else:
+            tree = np.load(filename)
         g = None
         if self.opt.tree_filename.endswith('.npz'):
             t = tree['tree']
@@ -691,6 +694,25 @@ def main(opt):
               goalSampleRate=opt.goal_sample_rate, star=not opt.no_star,
               curvature=opt.curvature, step_size=opt.step_size, agent=agent, maxIter=100000, opt=opt)
     
+    if opt.play_all:
+        exe_time = []
+        for j in range(50):
+            filename = opt.tree_filename + 'path%d.npz' % j
+            goalind = rrt.load_tree(filename)
+            control, path = rrt.gen_final_course(goalind)
+            if len(path) > 1:
+                # # draw
+                # rrt.DrawGraph()
+                # plt.plot([x for (x, y, _) in path], [y for (x, y, _) in path], '-r')
+                # plt.pause(0.001)
+                # plt.show()
+                # # replay
+                start_time = time.time()
+                rrt.replay(control, path)
+                exe_time.append(time.time()-start_time)
+        np.save(opt.tree_filename+'.all_time.npy', exe_time)
+        return
+    
     # path planning
     if not opt.load_and_replay:
         if opt.continue_train:
@@ -703,12 +725,12 @@ def main(opt):
     else:
         print('=-=-=-=-=-=-=-=-= load from npy file')
         goalind = rrt.load_tree()
-        print(rrt.start.get_state())
-        print(rrt.end.get_state())
+        # print(rrt.start.get_state())
+        # print(rrt.end.get_state())
         # control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
         control, path = rrt.gen_final_course(goalind)
-        print(control)
-        print(path)
+        # print(control)
+        # print(path)
     
     if len(path) > 1:
         # draw
@@ -746,6 +768,7 @@ if __name__ == '__main__':
     parser.add_argument('--greedy_voronoi', action='store_true')
     parser.add_argument('--continue_train', action='store_true')
     parser.add_argument('--generate_path', action='store_true')
+    parser.add_argument('--play_all', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging
