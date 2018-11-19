@@ -410,14 +410,15 @@ class RRT():
         return minind
     
     def avoid_dead_end(self, nodeList, nind):
-        degrees = np.zeros(len(nodeList))
+        degrees = [0 for _ in range(len(nodeList))]
         for node in nodeList:
             if node.parent == None:
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
-            dlist = [(node.x - rnd.x) ** 2 +
-                 (node.y - rnd.y) ** 2 for node in nodeList]
+            nnode = nodeList[nind]
+            dlist = [(node.x - nnode.x) ** 2 +
+                 (node.y - nnode.y) ** 2 for node in nodeList]
             dlist[nind] = float('inf')
             nind = dlist.index(min(dlist))
         return nind
