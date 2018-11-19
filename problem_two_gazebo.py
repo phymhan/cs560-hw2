@@ -287,9 +287,9 @@ class RRT():
             vor.append(dlist.index(min(dlist)))
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
-        # pind = random.choice(range(N))
-        pind = mode(vor)[0]
-        nind = vor[pind]
+        pind = random.choice(range(N))
+        nind = mode(vor)[0]
+        # nind = vor[pind]
         rnd = Node(points[pind][0], points[pind][1], 0)
         return rnd, nind
 
