@@ -477,7 +477,7 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
-            if degrees[ind] > MAX_NUM_DEGREE:
+            if degrees[nind] > MAX_NUM_DEGREE:
                 return None
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
