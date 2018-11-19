@@ -705,7 +705,7 @@ def main(opt):
         print(rrt.start.get_state())
         print(rrt.end.get_state())
         # control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
-        rrt.gen_final_course(goalind)
+        control, path = rrt.gen_final_course(goalind)
         print(control)
         print(path)
     
