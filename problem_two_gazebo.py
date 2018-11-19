@@ -129,7 +129,10 @@ class RRT():
     def sample_control(self, currState):
         # node : node
         # state: (xyz, yaw)
-        speed = random.uniform(-MAX_SPEED, MAX_SPEED)
+        # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
+        speed = random.uniform(0, MAX_SPEED)
+        if random.random() < 0.5:
+            speed = -speed
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
         angle = np.deg2rad(angle)
         duration = random.uniform(MIN_DURATION, MAX_DURATION)
