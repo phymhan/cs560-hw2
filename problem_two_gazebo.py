@@ -103,7 +103,10 @@ class RRT():
                 control = ai_control
             if cnt < 50:
                 control = self.clamp_control(control)
-                nind = 0
+                new_ind = self.perform_control(currState, control)
+                newNode = self.steer(new_rnd, nind)
+                self.expand_tree(newNode)
+                nind = len(self.nodeList) - 1
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
@@ -190,7 +193,7 @@ class RRT():
         return speed, angle/2, duration
     
     def clamp_control(self, control):
-        return random.random()*0.5*control[0], control[1], random.random()*0.2*control[2]
+        return random.random()*0.1*control[0], control[1], random.random()*0.1*control[2]
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
