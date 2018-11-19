@@ -634,6 +634,7 @@ def generate_paths(npyfile):
         if t[g][0] != None:
             g = t[g][0]
             path.append(g)
+        print(path)
         startind = []
         L = len(path)
         for i in range(L):
