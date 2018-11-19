@@ -24,8 +24,10 @@ from scipy.stats import mode
 random.seed(0)
 np.random.seed(0)
 
-MIN_SPEED = 0.1
-MAX_SPEED = 2
+MIN_POSITIVE_SPEED = 0.5
+MIN_NEGATIVE_SPEED = 2
+MAX_POSITIVE_SPEED = 2
+MAX_NEGATIVE_SPEED = 6
 MAX_ANGLE = 10
 MIN_DURATION = 1
 MAX_DURATION = 3
@@ -146,8 +148,10 @@ class RRT():
         # state: (xyz, yaw)
         if random.random() < 0.1:
             return self.calc_control(currState, rndState)
-        # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
-        speed = random.uniform(MIN_SPEED, MAX_SPEED)
+        if random.random() < 0.5:
+            speed = random.uniform(-MAX_NEGATIVE_SPEED, -MIN_NEGATIVE_SPEED)
+        else:
+            speed = random.uniform(MIN_POSITIVE_SPEED, MAX_POSITIVE_SPEED)
         if random.random() < 0.5:
             speed = -speed
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
