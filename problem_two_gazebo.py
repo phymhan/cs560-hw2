@@ -93,8 +93,9 @@ class RRT():
             if cnt < 50:
                 nind = 0
                 rnd = None
-            self.DrawGraph(rnd=rnd, nind=nind)
-            nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
+            else:
+                self.DrawGraph(rnd=rnd, nind=nind)
+                nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
             currState = self.get_state_from_index(nind)
             if ai_control is None:
                 self.DrawGraph(rnd=rnd, nind=nind)
