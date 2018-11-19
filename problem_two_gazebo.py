@@ -31,7 +31,7 @@ MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
-MAX_NUM_DEGREE = 10
+MAX_NUM_DEGREE = 2
 
 
 def voronoi_dist(p1, p2):
@@ -325,7 +325,15 @@ class RRT():
             vor.append(dlist.index(min(dlist)))
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
-        pind = random.choice(range(N))
+        if self.opt.greedy_voronoi:
+            dgoal = np.array([voronoi_dist(p, self.end.get_state()) for p in points])
+            p = -dgoal
+            p = p-p.min()+20
+            p = p / p.sum()
+            pind = np.random.choice(range(N), p=p)
+        else:
+            pind = random.choice(range(N))
+
         # nind = mode(vor)[0]
         nind = vor[pind]
         rnd = Node(points[pind][0], points[pind][1], 0)
@@ -469,6 +477,8 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
+            if degrees[ind] > MAX_NUM_DEGREE:
+                return None
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
             else:
@@ -620,6 +630,7 @@ if __name__ == '__main__':
     parser.add_argument('--tree_filename', type=str, default='tree_naive.npy')
     parser.add_argument('--load_and_replay', action='store_true')
     parser.add_argument('--use_voronoi', action='store_true')
+    parser.add_argument('--greedy_voronoi', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging
