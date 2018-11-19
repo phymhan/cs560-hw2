@@ -24,11 +24,11 @@ from scipy.stats import mode
 random.seed(0)
 np.random.seed(0)
 
-MIN_SPEED = 2
-MAX_SPEED = 10
+MIN_SPEED = 0.1
+MAX_SPEED = 2
 MAX_ANGLE = 30
-MIN_DURATION = 0.1
-MAX_DURATION = 2
+MIN_DURATION = 1
+MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
