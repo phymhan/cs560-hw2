@@ -26,7 +26,7 @@ np.random.seed(0)
 
 MIN_SPEED = 0.1
 MAX_SPEED = 2
-MAX_ANGLE = 30
+MAX_ANGLE = 10
 MIN_DURATION = 1
 MAX_DURATION = 3
 CARLEN = 3
@@ -529,6 +529,7 @@ class RRT():
     
     def get_ai_control(self, nind=0):
         currState = self.get_state_from_index(nind)
+        self.set_state(currState)
         print('curr state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         control = raw_input('enter control (speed, angle, duration):')
         if control == '':
