@@ -541,6 +541,7 @@ class RRT():
     
     def get_ai_control(self, nind=0):
         currState = self.get_state_from_index(nind)
+        self.set_state(currState)
         print('==> current state:', currState)
         control = raw_input('enter control (speed, angle, duration):')
         control = [float(x) for x in control.split()]
