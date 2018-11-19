@@ -24,11 +24,11 @@ from scipy.stats import mode
 random.seed(0)
 np.random.seed(0)
 
-MIN_POSITIVE_SPEED = 0.5
-MIN_NEGATIVE_SPEED = 2
+MIN_POSITIVE_SPEED = 0.25
+MIN_NEGATIVE_SPEED = 1.5
 MAX_POSITIVE_SPEED = 2
-MAX_NEGATIVE_SPEED = 6
-MAX_ANGLE = 10
+MAX_NEGATIVE_SPEED = 5
+MAX_ANGLE = 20
 MIN_DURATION = 1
 MAX_DURATION = 3
 CARLEN = 3
@@ -75,14 +75,15 @@ class RRT():
         self.agent = agent
         self.opt = opt
 
-    def Planning(self, animation=True):
+    def Planning(self, animation=True, start=0):
         """
         Pathplanning
 
         animation: flag for animation on or off
         """
-
-        self.nodeList = [self.start]
+        cnt = 0
+        if start == 0:
+            self.nodeList = [self.start]
         for i in range(self.maxIter):
             if self.opt.use_voronoi:
                 rnd, nind = self.get_voronoi_point()
@@ -100,6 +101,8 @@ class RRT():
                 control = self.sample_control(currState, rndState)
             else:
                 control = ai_control
+            if cnt < 50:
+                control = self.clamp_control(control)
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
@@ -117,6 +120,8 @@ class RRT():
                 # force stop
                 self.agent.action(0, 0, 1)
                 break
+            
+            cnt += 1
             
             # HACK
             self.save_tree()
@@ -143,7 +148,7 @@ class RRT():
     def get_state_from_node(self, rnd):
         return [rnd.x, rnd.y, Z_VALUE], rnd.yaw
 
-    def sample_control(self, currState, rndState):
+    def sample_control(self, currState, rndState=None):
         # node : node
         # state: (xyz, yaw)
         if random.random() < 0.1:
@@ -182,6 +187,11 @@ class RRT():
         if abs(angle) > MAX_ANGLE:
             angle = MAX_ANGLE if angle > 0 else -MAX_ANGLE
         return speed, angle/2, duration
+    
+    def clamp_control(self, control):
+        control[0] = random.random()*0.5*control[0]
+        control[2] = random.random()*control[2]
+        return control
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
@@ -301,6 +311,14 @@ class RRT():
 
         return node
     
+    def get_current_best(self):
+        dlist = [(node.x - self.end.x) ** 2 +
+                 (node.y - self.end.y) ** 2 +
+                 (node.yaw - self.end.yaw) ** 2 for node in self.nodeList]
+        minind = dlist.index(min(dlist))
+
+        return minind, dlist[minind]
+    
     def get_voronoi_point(self):
         # # generate lots of points
         # N = 1000
@@ -318,7 +336,13 @@ class RRT():
         # nind = vor[pind]
         # rnd = Node(points[pind][0], points[pind][1], 0)
         # return rnd, nind
-
+        bestind, bestdist = self.get_current_best()
+        bestdist < (TOL_GOAL*3) ** 2
+        if random.randint(0, 100) < self.goalSampleRate:
+            rnd = [self.end.x, self.end.y, self.end.yaw]
+            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            return rnd, nind
+        
         # generate lots of points
         N = 1000
         points = np.random.rand(N, 3)
@@ -330,6 +354,7 @@ class RRT():
             vor.append(dlist.index(min(dlist)))
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
+        
         if self.opt.greedy_voronoi:
             dgoal = np.array([voronoi_dist(p, self.end.get_state()) for p in points])
             p = -dgoal
@@ -548,8 +573,11 @@ class RRT():
         self.set_state(currState)
         print('==> current state:', currState)
         control = raw_input('enter control (speed, angle, duration):')
-        control = [float(x) for x in control.split()]
-        control[1] = np.deg2rad(control[1])
+        if control == '':
+            control = self.sample_control(currState)
+        else:
+            control = [float(x) for x in control.split()]
+            control[1] = np.deg2rad(control[1])
         return control
 
 class Node():
@@ -599,7 +627,11 @@ def main(opt):
     
     # path planning
     if not opt.load_and_replay:
-        control, path = rrt.Planning(animation=opt.show_animation)
+        if opt.continue_train:
+            rrt.load_tree()
+            control, path = rrt.Planning(animation=opt.show_animation, start=1)
+        else:
+            control, path = rrt.Planning(animation=opt.show_animation)
         # save
         rrt.save_tree()
     else:
@@ -641,6 +673,7 @@ if __name__ == '__main__':
     parser.add_argument('--load_and_replay', action='store_true')
     parser.add_argument('--use_voronoi', action='store_true')
     parser.add_argument('--greedy_voronoi', action='store_true')
+    parser.add_argument('--continue_train', action='store_true')
     opt = parser.parse_args()
 
     # set defaults for debuging

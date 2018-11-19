@@ -134,7 +134,7 @@ class RRT():
     def sample_control(self, currState, rndState):
         # node : node
         # state: (xyz, yaw)
-        if random.random() < 0.1:
+        if random.random() < 0.1 and rndState != None:
             return self.calc_control(currState, rndState)
         # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
         speed = random.uniform(MIN_SPEED, MAX_SPEED)
