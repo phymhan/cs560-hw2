@@ -279,7 +279,7 @@ class RRT():
         N = 1000
         points = np.random.rand(N, 2)
         points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
-        points -= np.array([self.maxrand_x+self.minrand_x, self.maxrand_y+self.minrand_y])/2
+        points += np.array([self.minrand_x, self.minrand_y])
         vor = []
         for n in range(N):
             dlist = [(points[n][0]-node.x)**2 + (points[n][1]-node.y) for node in self.nodeList]
