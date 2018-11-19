@@ -25,7 +25,7 @@ random.seed(0)
 np.random.seed(0)
 
 MAX_SPEED = 2
-MAX_ANGLE = 15
+MAX_ANGLE = 5
 MIN_DURATION = 1
 MAX_DURATION = 3
 CARLEN = 3
@@ -132,6 +132,8 @@ class RRT():
     def sample_control(self, currState, rndState):
         # node : node
         # state: (xyz, yaw)
+        if random.random() < 1:
+            return self.calc_control(currState, rndState)
         # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
         speed = random.uniform(0, MAX_SPEED)
         if random.random() < 0.5:
@@ -142,8 +144,6 @@ class RRT():
         
         # if random.random() < 0.5 and (currState[0][0]-self.end.x)**2 + (currState[0][1]-self.end.y)**2 < 3.5**2:
         #     return self.calc_control(currState, ([self.end.x, self.end.y, Z_VALUE], 0))
-        if random.random() < 0.5:
-            return self.calc_control(currState, rndState)
 
         return speed, angle, duration
     
@@ -157,6 +157,7 @@ class RRT():
         duration = math.sqrt((tarState[0][1]-srcState[0][1])**2+(tarState[0][0]-srcState[0][0])**2)/speed
         duration = min(duration, MAX_DURATION)
         if abs(angle) > math.pi/2:
+            print('Ah')
             speed *= -1
             if angle > 0:
                 angle = math.pi-abs(angle)
