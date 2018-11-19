@@ -176,8 +176,8 @@ class RRT():
         # self.agent.setState([5,5,0], quart)
         # time.sleep(5)
         print('setting done.')
-        currState = self.agent.getState()
-        print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
+        # currState = self.agent.getState()
+        # print('confirm state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         print('action')
         # print('setting done. performing action...')
         # then, action
@@ -431,10 +431,13 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
-            dlist = [(node.x - rnd.x) ** 2 +
-                 (node.y - rnd.y) ** 2 for node in nodeList]
-            dlist[nind] = float('inf')
-            nind = dlist.index(min(dlist))
+            if nodeList[nind].parent is not None:
+                nind = nodeList[nind].parent
+            else:
+                dlist = [(node.x - rnd.x) ** 2 +
+                    (node.y - rnd.y) ** 2 for node in nodeList]
+                dlist[nind] = float('inf')
+                nind = dlist.index(min(dlist))
         return nind
 
     # def CollisionCheck(self, node, obstacleList):
