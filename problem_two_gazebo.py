@@ -79,6 +79,7 @@ class RRT():
             else:
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
+            nind = self.avoid_dead_end(self.nodeList, nind)
             self.DrawGraph(rnd=rnd)
             time.sleep(1)
 
@@ -407,6 +408,19 @@ class RRT():
         minind = dlist.index(min(dlist))
 
         return minind
+    
+    def avoid_dead_end(self, nodeList, nind):
+        degrees = np.zeros(len(nodeList))
+        for node in nodeList:
+            if node.parent == None:
+                continue
+            degrees[node.parent] += 1
+        if nind == degrees.index(max(degrees)):
+            dlist = [(node.x - rnd.x) ** 2 +
+                 (node.y - rnd.y) ** 2 for node in nodeList]
+            dlist[nind] = float('inf')
+            nind = dlist.index(min(dlist))
+        return nind
 
     # def CollisionCheck(self, node, obstacleList):
 
