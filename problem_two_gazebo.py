@@ -189,7 +189,7 @@ class RRT():
         return speed, angle/2, duration
     
     def clamp_control(self, control):
-        return random.random()*0.5*control[0], control[1], random.random()*control[2]
+        return random.random()*0.5*control[0], control[1], random.random()*0.2*control[2]
     
     def euler2quart(self, euler):
         return tf.transformations.quaternion_from_euler(*euler)
@@ -337,7 +337,7 @@ class RRT():
         bestind, bestdist = self.get_current_best()
         bestdist < (TOL_GOAL*3) ** 2
         if random.randint(0, 100) < self.goalSampleRate:
-            rnd = [self.end.x, self.end.y, self.end.yaw]
+            rnd = Node(self.end.x, self.end.y, self.end.yaw)
             nind = self.GetNearestListIndex(self.nodeList, rnd)
             return rnd, nind
         
