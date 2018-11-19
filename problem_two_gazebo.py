@@ -695,7 +695,7 @@ def main(opt):
     
     if opt.play_all:
         exe_time = []
-        for j in range(1):
+        for j in range(50):
             filename = opt.tree_filename + 'path%d.npz' % j
             goalind = rrt.load_tree(filename)
             control, path = rrt.gen_final_course(goalind)
