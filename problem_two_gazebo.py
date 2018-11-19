@@ -80,7 +80,7 @@ class RRT():
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             # nind = self.avoid_dead_end(self.nodeList, nind, rnd)
-            self.DrawGraph(rnd=rnd)
+            self.DrawGraph(rnd=rnd, nind=nind)
             time.sleep(1)
 
             # nind = len(self.nodeList)-1
@@ -379,13 +379,16 @@ class RRT():
                 #  print("rewire")
                 self.nodeList[i] = tNode
 
-    def DrawGraph(self, rnd=None):
+    def DrawGraph(self, rnd=None, nind=None):
         """
         Draw Graph
         """
         plt.clf()
         if rnd is not None:
             plt.plot(rnd.x, rnd.y, "^k")
+        if nind is not None:
+            nnode = self.nodeList[nind]
+            plt.plot(nnode.x, nnode.y, "^r")
         for node in self.nodeList:
             if node.parent is not None:
                 # plt.plot(node.path_x, node.path_y, "-g")
