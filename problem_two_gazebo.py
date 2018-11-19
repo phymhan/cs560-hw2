@@ -26,7 +26,7 @@ np.random.seed(0)
 
 MAX_SPEED = 1
 MAX_ANGLE = 15
-MIN_DURATION = 0.5
+MIN_DURATION = 1
 MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
@@ -431,7 +431,6 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
-            print('might be a dead end, re-select: %d' % nind)
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
             else:
