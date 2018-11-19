@@ -553,6 +553,7 @@ class RRT():
     def load_tree(self):
         nodeList = []
         tree = np.load(self.opt.tree_filename)
+        g = None
         if self.opt.tree_filename.endswith('.npz'):
             t = tree['tree']
             s = int(tree['start'])
@@ -566,6 +567,7 @@ class RRT():
             node.control = (a[4], a[5], a[6])
             nodeList.append(node)
         self.nodeList = nodeList
+        return g
     
     def replay(self, controls, paths):
         print('===========================================')
@@ -699,10 +701,11 @@ def main(opt):
         rrt.save_tree()
     else:
         print('=-=-=-=-=-=-=-=-= load from npy file')
-        rrt.load_tree()
+        goalind = rrt.load_tree()
         print(rrt.start.get_state())
         print(rrt.end.get_state())
-        control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
+        # control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
+        rrt.gen_final_course(goalind)
         print(control)
         print(path)
     
