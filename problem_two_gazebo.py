@@ -31,7 +31,7 @@ MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
-MAX_NUM_DEGREE = 2
+MAX_NUM_DEGREE = 10
 
 
 def voronoi_dist(p1, p2):
@@ -114,6 +114,9 @@ class RRT():
                 # force stop
                 self.agent.action(0, 0, 1)
                 break
+            
+            # HACK
+            self.save_tree()
 
         # generate coruse
         lastIndex = self.GetNearestListIndex(self.nodeList, self.end)
@@ -476,11 +479,7 @@ class RRT():
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
             if degrees[nind] > MAX_NUM_DEGREE:
-                # AI
-                currState = self.get_state_from_index(nind)
-                print('==> current state:', currState)
-                control = raw_input('enter control (speed, angle, duration):')
-                control = [float(x) for x in control.split()]
+                control = self.get_ai_control(nind)
                 return nind, control
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
@@ -544,6 +543,13 @@ class RRT():
     def stop(self):
         self.set_state(self.get_state())
         self.agent.action(0, 0, 60)
+    
+    def get_ai_control(self, nind=0):
+        currState = self.get_state_from_index(nind)
+        print('==> current state:', currState)
+        control = raw_input('enter control (speed, angle, duration):')
+        control = [float(x) for x in control.split()]
+        return control
 
 class Node():
     """
