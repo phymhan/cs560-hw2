@@ -103,6 +103,7 @@ class RRT():
                 control = ai_control
             if cnt < 50:
                 control = self.clamp_control(control)
+                nind = 0
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
