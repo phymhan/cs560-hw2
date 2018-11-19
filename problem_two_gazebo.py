@@ -675,7 +675,7 @@ def main(opt):
     # goal = [-6, 5, np.deg2rad(90)]
 
     if opt.generate_path:
-        generate_paths(opt.npy_filename)
+        generate_paths(opt.tree_filename)
         return
 
     agent = Gazebo()
