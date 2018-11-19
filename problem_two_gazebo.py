@@ -87,19 +87,16 @@ class RRT():
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
-            nind = self.avoid_dead_end(self.nodeList, nind, rnd)
-            if nind is None:
-                # AI
-                print('==> current state:', self.get_state())
-                control = raw_input('enter control (speed, angle, duration):')
-                control = [float(x) for x in control.split()]
-            else:
+            nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
+            if ai_control is None:
                 self.DrawGraph(rnd=rnd, nind=nind)
                 print('nearest index: %d' % nind)
                 currState = self.get_state_from_index(nind)
                 rndState = self.get_state_from_node(rnd)
                 print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
-            control = self.sample_control(currState, rndState)
+                control = self.sample_control(currState, rndState)
+            else:
+                control = ai_control
             print('sampled control: (%.1f, %.1f, %.1f)' % (control[0], control[1], control[2]))
             new_rnd = self.perform_control(currState, control)
 
@@ -471,6 +468,7 @@ class RRT():
         return minind
     
     def avoid_dead_end(self, nodeList, nind, rnd):
+        control = None
         degrees = [0 for _ in range(len(nodeList))]
         for node in nodeList:
             if node.parent == None:
@@ -478,7 +476,12 @@ class RRT():
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
             if degrees[nind] > MAX_NUM_DEGREE:
-                return None
+                # AI
+                currState = self.get_state_from_index(nind)
+                print('==> current state:', currState)
+                control = raw_input('enter control (speed, angle, duration):')
+                control = [float(x) for x in control.split()]
+                return nind, control
             if nodeList[nind].parent is not None:
                 nind = nodeList[nind].parent
             else:
@@ -488,7 +491,7 @@ class RRT():
                 # nind = dlist.index(min(dlist))
                 nind = 0
             print('might be a dead end, re-select: %d' % nind)
-        return nind
+        return nind, control
 
     # def CollisionCheck(self, node, obstacleList):
 
