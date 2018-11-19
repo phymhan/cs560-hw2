@@ -631,7 +631,7 @@ def generate_paths(npyfile):
         g = random.choice(goalind)
         # get path
         path = [g]
-        if t[g][0] != None:
+        while t[g][0] != None:
             g = t[g][0]
             path.append(g)
         print(path)
