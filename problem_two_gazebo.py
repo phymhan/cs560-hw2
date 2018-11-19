@@ -79,7 +79,7 @@ class RRT():
             else:
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
-            nind = self.avoid_dead_end(self.nodeList, nind, rnd)
+            # nind = self.avoid_dead_end(self.nodeList, nind, rnd)
             self.DrawGraph(rnd=rnd)
             time.sleep(1)
 
@@ -284,6 +284,7 @@ class RRT():
         for n in range(N):
             dlist = [(points[n][0]-node.x)**2 + (points[n][1]-node.y) for node in self.nodeList]
             vor.append(dlist.index(min(dlist)))
+        plt.scatter(points[:,0],pionts[:,1],c=vor)
         pind = random.choice(range(N))
         nind = vor[pind]
         rnd = Node(points[pind][0], points[pind][1], 0)
