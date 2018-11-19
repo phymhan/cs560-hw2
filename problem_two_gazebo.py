@@ -31,7 +31,7 @@ MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
-MAX_NUM_DEGREE = 10
+MAX_NUM_DEGREE = 5
 
 
 def voronoi_dist(p1, p2):
