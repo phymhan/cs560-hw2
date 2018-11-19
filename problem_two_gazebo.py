@@ -478,17 +478,11 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if nind == degrees.index(max(degrees)):
+            if nodeList[nind].parent is not None:
+                nind = nodeList[nind].parent
             if degrees[nind] > MAX_NUM_DEGREE:
                 control = self.get_ai_control(nind)
                 return nind, control
-            if nodeList[nind].parent is not None:
-                nind = nodeList[nind].parent
-            else:
-                # dlist = [(node.x - rnd.x) ** 2 +
-                #     (node.y - rnd.y) ** 2 for node in nodeList]
-                # dlist[nind] = float('inf')
-                # nind = dlist.index(min(dlist))
-                nind = 0
             print('might be a dead end, re-select: %d' % nind)
         return nind, control
 
