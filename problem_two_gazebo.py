@@ -701,8 +701,10 @@ def main(opt):
         print('=-=-=-=-=-=-=-=-= load from npy file')
         rrt.load_tree()
         print(rrt.start.get_state())
-        print(rrt.end.get_state)
+        print(rrt.end.get_state())
         control, path = rrt.gen_final_course(rrt.GetNearestListIndex(rrt.nodeList, rrt.end))
+        print(control)
+        print(path)
     
     if len(path) > 1:
         # draw
