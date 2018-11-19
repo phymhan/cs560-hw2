@@ -25,7 +25,7 @@ random.seed(0)
 np.random.seed(0)
 
 MAX_SPEED = 2
-MAX_ANGLE = 5
+MAX_ANGLE = 30
 MIN_DURATION = 1
 MAX_DURATION = 3
 CARLEN = 3
@@ -132,7 +132,7 @@ class RRT():
     def sample_control(self, currState, rndState):
         # node : node
         # state: (xyz, yaw)
-        if random.random() < 1:
+        if random.random() < 0.1:
             return self.calc_control(currState, rndState)
         # speed = random.uniform(-MAX_SPEED, MAX_SPEED)
         speed = random.uniform(0, MAX_SPEED)
