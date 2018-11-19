@@ -631,13 +631,13 @@ def generate_paths(npyfile):
             goalind.append(i)
     print('=== goal === ', goalind)
     for j in range(50):
-        goalind = random.choice(goalind)
-        g = goalind
+        g = random.choice(goalind)
+        g_ = g
         # get path
-        path = [g]
-        while t[g][0] != None:
-            g = t[g][0]
-            path.append(g)
+        path = [g_]
+        while t[g_][0] != None:
+            g_ = t[g_][0]
+            path.append(g_)
         print(path)
         startind = []
         L = len(path)
