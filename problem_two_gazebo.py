@@ -509,13 +509,15 @@ class RRT():
             if node.parent == None:
                 continue
             degrees[node.parent] += 1
-        if nind == degrees.index(max(degrees)):
-            if nodeList[nind].parent is not None:
-                nind = nodeList[nind].parent
-            if degrees[nind] > MAX_NUM_DEGREE:
-                control = self.get_ai_control(nind)
-                return nind, control
-            print('might be a dead end, re-select: %d' % nind)
+        if degrees[nind] > MAX_NUM_DEGREE:
+            nind = random.choice(range(len(self.nodeList)))
+        # if nind == degrees.index(max(degrees)):
+        #     if nodeList[nind].parent is not None:
+        #         nind = nodeList[nind].parent
+        #     if degrees[nind] > MAX_NUM_DEGREE:
+        #         control = self.get_ai_control(nind)
+        #         return nind, control
+        #     print('might be a dead end, re-select: %d' % nind)
         return nind, control
 
     # def CollisionCheck(self, node, obstacleList):
