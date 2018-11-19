@@ -155,7 +155,10 @@ class RRT():
         return [node.x, node.y, Z_VALUE], node.yaw
     
     def get_state_from_node(self, rnd):
-        return [rnd.x, rnd.y, Z_VALUE], rnd.yaw
+        if rnd is None:
+            return None
+        else:
+            return [rnd.x, rnd.y, Z_VALUE], rnd.yaw
 
     def sample_control(self, currState, rndState=None):
         # node : node
