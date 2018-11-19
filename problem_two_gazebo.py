@@ -33,6 +33,12 @@ Z_VALUE = 0.1
 TOL_GOAL = 1
 
 
+def voronoi_dist(p1, p2):
+    x2 = (p1[0]-p2[0]) ** 2
+    y2 = (p1[1]-p2[1]) ** 2
+    a2 = min((p1[2]-p2[2]) ** 2, (p1[2]+2*math.pi-p2[2]) ** 2)
+    return math.sqrt(x2+y2+a2)
+
 class RRT():
     """
     Class for RRT Planning
@@ -80,8 +86,8 @@ class RRT():
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
-            # nind = self.avoid_dead_end(self.nodeList, nind, rnd)
-            # self.DrawGraph(rnd=rnd, nind=nind)
+            nind = self.avoid_dead_end(self.nodeList, nind, rnd)
+            self.DrawGraph(rnd=rnd, nind=nind)
             
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
@@ -286,14 +292,31 @@ class RRT():
         return node
     
     def get_voronoi_point(self):
+        # # generate lots of points
+        # N = 1000
+        # points = np.random.rand(N, 2)
+        # points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
+        # points += np.array([self.minrand_x, self.minrand_y])
+        # vor = []
+        # for n in range(N):
+        #     dlist = [(points[n][0]-node.x)**2 + (points[n][1]-node.y) for node in self.nodeList]
+        #     vor.append(dlist.index(min(dlist)))
+        # # plt.scatter(points[:,0],points[:,1],c=vor)
+        # # plt.show()
+        # pind = random.choice(range(N))
+        # # nind = mode(vor)[0]
+        # nind = vor[pind]
+        # rnd = Node(points[pind][0], points[pind][1], 0)
+        # return rnd, nind
+
         # generate lots of points
         N = 1000
-        points = np.random.rand(N, 2)
-        points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
-        points += np.array([self.minrand_x, self.minrand_y])
+        points = np.random.rand(N, 3)
+        points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y, 2*math.pi])
+        points += np.array([self.minrand_x, self.minrand_y, -math.pi])
         vor = []
         for n in range(N):
-            dlist = [(points[n][0]-node.x)**2 + (points[n][1]-node.y) for node in self.nodeList]
+            dlist = [voronoi_dist(points[n], node.get_state()) for node in self.nodeList]
             vor.append(dlist.index(min(dlist)))
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
@@ -425,11 +448,11 @@ class RRT():
         #  input()
 
     def GetNearestListIndex(self, nodeList, rnd):
-        # dlist = [(node.x - rnd.x) ** 2 +
-        #          (node.y - rnd.y) ** 2 +
-        #          (node.yaw - rnd.yaw) ** 2 for node in nodeList]
         dlist = [(node.x - rnd.x) ** 2 +
-                 (node.y - rnd.y) ** 2 for node in nodeList]
+                 (node.y - rnd.y) ** 2 +
+                 (node.yaw - rnd.yaw) ** 2 for node in nodeList]
+        # dlist = [(node.x - rnd.x) ** 2 +
+        #          (node.y - rnd.y) ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
 
         return minind
@@ -518,6 +541,9 @@ class Node():
         self.control = []
         self.cost = 0.0
         self.parent = None
+    
+    def get_state(self):
+        return [self.x, self.y, self.yaw]
 
 
 def main(opt):
