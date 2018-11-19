@@ -84,6 +84,7 @@ class RRT():
         for i in range(self.maxIter):
             rnd, nind = self.get_voronoi_point()
             self.DrawGraph(rnd=rnd, nind=nind)
+            currState = self.get_state_from_index(nind)
             control = self.get_ai_control(nind)
             if control is None:
                 control = self.sample_control(self.get_state_from_index(nind), self.get_state_from_node(rnd))
@@ -528,7 +529,7 @@ class RRT():
     
     def get_ai_control(self, nind=0):
         currState = self.get_state_from_index(nind)
-        print('==> current state:', currState)
+        print('curr state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         control = raw_input('enter control (speed, angle, duration):')
         if control == '':
             return None

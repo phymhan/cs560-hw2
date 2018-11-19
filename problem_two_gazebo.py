@@ -89,10 +89,10 @@ class RRT():
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
             nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
+            currState = self.get_state_from_index(nind)
             if ai_control is None:
                 self.DrawGraph(rnd=rnd, nind=nind)
                 print('nearest index: %d' % nind)
-                currState = self.get_state_from_index(nind)
                 rndState = self.get_state_from_node(rnd)
                 print('current state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
                 control = self.sample_control(currState, rndState)
