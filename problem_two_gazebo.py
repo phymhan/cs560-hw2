@@ -553,11 +553,10 @@ class RRT():
     def load_tree(self, filename=None):
         nodeList = []
         if filename is None:
-            tree = np.load(self.opt.tree_filename)
-        else:
-            tree = np.load(filename)
+            filename = self.opt.tree_filename
+        tree = np.load(filename)
         g = None
-        if self.opt.tree_filename.endswith('.npz'):
+        if filename.endswith('.npz'):
             t = tree['tree']
             s = int(tree['start'])
             g = int(tree['goal'])
