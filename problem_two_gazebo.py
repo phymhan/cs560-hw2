@@ -478,7 +478,7 @@ class RRT():
             nnode = self.nodeList[nind]
             plt.plot(nnode.x, nnode.y, "^r")
         for node in self.nodeList:
-            if node.parent is not None:
+            if node.parent is not None and node.parent >= 0:
                 # plt.plot(node.path_x, node.path_y, "-g")
                 pNode = self.nodeList[node.parent]
                 plt.plot([pNode.x, node.x], [pNode.y, node.y], "-g")
@@ -553,6 +553,12 @@ class RRT():
     def load_tree(self):
         nodeList = []
         tree = np.load(self.opt.tree_filename)
+        if self.opt.tree_filename.endswith('.npz'):
+            t = tree['tree']
+            s = tree['start']
+            g = tree['goal']
+            self.start = Node(t[s][1], t[s][2], t[s][3])
+            self.end = Node(t[g][1], t[g][2], t[g][3])
         for a in tree:
             node = Node(a[1], a[2], a[3])
             node.parent = None if a[0] is None else int(a[0])
@@ -611,6 +617,41 @@ class Node():
     
     def get_state(self):
         return [self.x, self.y, self.yaw]
+
+
+def generate_paths(npyfile):
+    t = np.load(npyfile)
+    # select goal
+    goalind = []
+    for i in range(len(t)):
+        if t[i][1] >= 6.5 and t[i][2] >= 3.5:
+            goalind.append(i)
+    for j in range(50):
+        g = random.choice(goalind)
+        # get path
+        path = [g]
+        if t[g][0] != None:
+            g = t[g][0]
+            path.append(g)
+        startind = []
+        L = len(path)
+        for i in range(L):
+            if path[L-i-1][1] <= -5 and path[L-i-1][2] <= -2.5:
+                startind.append(i)
+        s = random.choice(startind)
+        t_new = copy.deepcopy(t)
+        t_new[s][0] = None
+        deg = [0 for _ in range(len(t))]
+        for a in t:
+            if a[0] != None:
+                deg[a[0]] += 1
+        for i in range(len(t)):
+            if i != s and i != g and deg[i] == 0:
+                if random.random() < 0.3:
+                    t_new[i][0] = -1
+        filename = npyfile + 'path%d.npz' % j
+        with open(filename, 'w') as f:
+            np.savez(f, tree=t_new, goal=g, start=s)
 
 
 def main(opt):
