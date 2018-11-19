@@ -637,8 +637,8 @@ def generate_paths(npyfile):
         startind = []
         L = len(path)
         for i in range(L):
-            if path[L-i-1][1] <= -5 and path[L-i-1][2] <= -2.5:
-                startind.append(i)
+            if t[path[L-i-1]][1] <= -5 and t[path[L-i-1]][2] <= -2.5:
+                startind.append(path[L-i-1])
         print('=== start === ', startind)
         s = random.choice(startind)
         t_new = copy.deepcopy(t)
