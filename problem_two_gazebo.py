@@ -26,8 +26,8 @@ np.random.seed(0)
 
 MAX_SPEED = 1
 MAX_ANGLE = 15
-MIN_DURATION = 1
-MAX_DURATION = 5
+MIN_DURATION = 0.5
+MAX_DURATION = 3
 CARLEN = 3
 Z_VALUE = 0.1
 TOL_GOAL = 1
@@ -276,10 +276,18 @@ class RRT():
     
     def get_voronoi_point(self):
         # generate lots of points
-        points = np.random.rand(1000, 2)
+        N = 1000
+        points = np.random.rand(N, 2)
         points *= np.array([self.maxrand_x-self.minrand_x, self.maxrand_y-self.minrand_y])
         points -= np.array([self.maxrand_x+self.minrand_x, self.maxrand_y+self.minrand_y])/2
-        dists = None
+        vor = []
+        for n in range(N):
+            dlist = [(points[n][0]-node.x)**2 + (points[n][1]-node.y) for node in self.nodeList]
+            vor.append(dlist.index(min(dlist)))
+        pind = random.choicerange(N)
+        nind = vor[pind]
+        rnd = Node(points[pind][0], points[pind][1], 0)
+        return rnd, nind
 
     def get_best_last_index(self):
         #  print("get_best_last_index")
