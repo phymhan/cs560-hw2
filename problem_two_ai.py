@@ -175,6 +175,12 @@ class RRT():
         quart = self.euler2quart(euler)
         self.agent.setState(state[0], quart)
     
+    def force_set_state(self, state):
+        for _ in range(10):
+            self.set_state(state)
+            self.agent.action(0, 0, 0.1)
+            time.sleep(0.1)
+    
     def get_state(self):
         return self.agent.getState()
 
@@ -529,7 +535,7 @@ class RRT():
     
     def get_ai_control(self, nind=0):
         currState = self.get_state_from_index(nind)
-        self.set_state(currState)
+        self.force_set_state(currState)
         print('curr state: ([%.1f, %.1f, %.1f], %.1f)' % (currState[0][0], currState[0][1], currState[0][2], np.rad2deg(currState[1])))
         control = raw_input('enter control (speed, angle, duration):')
         if control == '':
