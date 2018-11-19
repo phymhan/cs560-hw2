@@ -518,7 +518,8 @@ class RRT():
                 continue
             degrees[node.parent] += 1
         if degrees[nind] > MAX_NUM_DEGREE:
-            nind = random.choice(range(len(self.nodeList)))
+            nind = self.find_near_nodes(rnd)
+            nind = random.choice(nind)
         # if nind == degrees.index(max(degrees)):
         #     if nodeList[nind].parent is not None:
         #         nind = nodeList[nind].parent
