@@ -80,8 +80,8 @@ class RRT():
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             self.DrawGraph(rnd=rnd, nind=nind)
-            nind = self.avoid_dead_end(self.nodeList, nind, rnd)
-            self.DrawGraph(rnd=rnd, nind=nind)
+            # nind = self.avoid_dead_end(self.nodeList, nind, rnd)
+            # self.DrawGraph(rnd=rnd, nind=nind)
             
             # nind = len(self.nodeList)-1
             print('nearest index: %d' % nind)
@@ -493,6 +493,7 @@ class RRT():
             print('--> action: speed %.1f, angle %.1f, duration %.1f' % (control[0], control[1], control[2]))
             self.agent.action(*control)
             time.sleep(control[2])
+            self.agent.action(0, 0, 0.1)
             expState = ([path[0], path[1], Z_VALUE], path[2])
             self.set_state(expState)
         print('=== YES! ===')
