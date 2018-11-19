@@ -129,7 +129,7 @@ class RRT():
     def sample_control(self, currState):
         # node : node
         # state: (xyz, yaw)
-        speed = random.uniform(0, MAX_SPEED)
+        speed = random.uniform(-MAX_SPEED, MAX_SPEED)
         angle = random.uniform(-MAX_ANGLE, MAX_ANGLE)
         angle = np.deg2rad(angle)
         duration = random.uniform(MIN_DURATION, MAX_DURATION)
@@ -287,7 +287,8 @@ class RRT():
             vor.append(dlist.index(min(dlist)))
         # plt.scatter(points[:,0],points[:,1],c=vor)
         # plt.show()
-        pind = random.choice(range(N))
+        # pind = random.choice(range(N))
+        pind = mode(vor)[0]
         nind = vor[pind]
         rnd = Node(points[pind][0], points[pind][1], 0)
         return rnd, nind
