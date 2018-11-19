@@ -91,7 +91,7 @@ class RRT():
                 rnd = self.get_random_point()
                 nind = self.GetNearestListIndex(self.nodeList, rnd)
             if cnt < 50:
-                nind = 1
+                nind = 0
                 rnd = None
             self.DrawGraph(rnd=rnd, nind=nind)
             nind, ai_control = self.avoid_dead_end(self.nodeList, nind, rnd)
